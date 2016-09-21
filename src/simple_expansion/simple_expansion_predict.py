@@ -18,16 +18,16 @@ with open("../../bytecup2016data/validate_nolabel.txt") as f:
     test_data = f.readline().strip().split(",")
 
     while test_data and len(test_data) == 2 :
-        
         question = questions[test_data[0]]
         user = users[test_data[1]]
         
         feature = get_full_feature(question, user)
         test_features.append(feature)
         
-        test_data = f.readline().strip().split("\t")
+        test_data = f.readline().strip().split(",")
         
         
+print len(test_features)
 
 test_labels = clf.predict(test_features)
 

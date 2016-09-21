@@ -95,3 +95,5 @@ bytecup2016data/
 .pydevproject
 
 *.p
+
+*.npy

@@ -80,11 +80,11 @@ def get_full_feature(question, user):
     ## can be replaced by cluster ids
     feature.extend(get_one_feature(Counter(question[3].split("/")), question_char_id))
     ## Fill #upvotes
-    feature.append(question[4])
+    feature.append(int(question[4]) )
     ## Fill #answers
-    feature.append(question[5])
+    feature.append(int(question[5]) )
     ## Fill #top quality answers
-    feature.append(question[6])
+    feature.append(int(question[6]) )
     
     # # fill features with user vector
     feature.extend(get_one_feature(Counter(user[1].split("/")), user_tags))
@@ -113,6 +113,7 @@ def main_fn():
                 print len(features)
                 
             training_data = f.readline().strip().split("\t")
+            
             
         
     print "features", len(features)

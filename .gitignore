@@ -93,3 +93,5 @@ bytecup2016data/
 .project
 
 .pydevproject
+
+*.p

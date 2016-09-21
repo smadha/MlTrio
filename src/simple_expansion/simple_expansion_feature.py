@@ -31,8 +31,15 @@ with open("../../bytecup2016data/user_info.txt") as f:
         user_char_id.update(user_data[3].split("/"))
         user_data = f.readline().strip().split("\t")
 
-print "users", len(users)
+# retaining top 500 features
+user_word_id = user_word_id.most_common(500)
+user_char_id = user_char_id.most_common(500)
 
+print "users", len(users)
+print "user_word_id", len(user_word_id) 
+print "user_char_id", len(user_char_id)
+print "user_tags", len(user_tags)
+                   
 with open("../../bytecup2016data/question_info.txt") as f:
     question_data = f.readline().strip().split("\t")
     while question_data and len(question_data) == 7 :
@@ -41,9 +48,16 @@ with open("../../bytecup2016data/question_info.txt") as f:
         question_word_id.update(question_data[2].split("/"))
         question_char_id.update(question_data[3].split("/"))
         question_data = f.readline().strip().split("\t")
-     
-       
+
+# retaining top 500 features
+question_word_id = question_word_id.most_common(500)
+question_char_id = question_char_id.most_common(500)
+
 print "questions", len(questions)
+print "question_word_id", len(question_word_id) 
+print "question_char_id", len(question_char_id)
+print "question_tags", len(question_tags)
+
 def get_one_feature(item_set, global_set):
     '''
     item_set - COUNTER of values present in current item
@@ -51,7 +65,7 @@ def get_one_feature(item_set, global_set):
     return - a feature of length global_set with value set if feature is present in item_set else 0
     '''
     feature_one = []
-    for tag in global_set.keys() :
+    for tag in global_set :
         feature_one.append(item_set[tag])
     
     return feature_one
@@ -93,10 +107,12 @@ def main_fn():
             question = questions[training_data[0]]
             user = users[training_data[1]]
             
-            feature = get_full_feature(question, user)
+            features.append(get_full_feature(question, user))
             
+            if len(features) % 1000 == 0:
+                print len(features)
+                
             training_data = f.readline().strip().split("\t")
-            features.append(feature)
             
         
     print "features", len(features)

@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+bytecup2016data/
+
+.project
+
+.pydevproject

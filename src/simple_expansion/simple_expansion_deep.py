@@ -7,9 +7,11 @@ from keras.models import Sequential
 import keras.regularizers as Reg
 from keras.optimizers import SGD
 from keras.callbacks import EarlyStopping
-
-
 import cPickle as pickle
+
+import theano
+theano.config.openmp = True
+OMP_NUM_THREADS=4 
 
 
 def genmodel(num_units, actfn='relu', reg_coeff=0.0, last_act='softmax'):
@@ -85,6 +87,14 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd,
 model.fit(features, labels, nb_epoch=nb_epoch, batch_size=batch_size, 
         verbose=verbose, callbacks=[call_ES], validation_split=0.1, 
         validation_data=None, shuffle=True)
+
+if eStop:
+    model.fit(features, labels, nb_epoch=nb_epoch, batch_size=batch_size, 
+    verbose=verbose, callbacks=[call_ES], validation_split=0.1, 
+    validation_data=None, shuffle=True)
+else:
+    model.fit(features, labels, nb_epoch=nb_epoch, batch_size=batch_size, 
+        verbose=verbose)
 
 # Save model
 model.save("model/model_deep.h5")

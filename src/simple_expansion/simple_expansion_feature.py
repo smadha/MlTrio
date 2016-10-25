@@ -70,6 +70,18 @@ def get_one_feature(item_set, global_set):
     
     return feature_one
 
+def get_user_feature(user):
+    feature = []
+    # # fill features with user vector
+    feature.extend(get_one_feature(Counter(user[1].split("/")), user_tags))
+    ## can be replaced by cluster ids
+    feature.extend(get_one_feature(Counter(user[2].split("/")), user_word_id))
+    ## can be replaced by cluster ids
+    feature.extend(get_one_feature(Counter(user[3].split("/")), user_char_id))
+    
+    return feature
+    
+
 def get_full_feature(question, user):
     feature = []
     # # fill features with question vector
@@ -86,12 +98,8 @@ def get_full_feature(question, user):
     ## Fill #top quality answers
     feature.append(int(question[6]) )
     
-    # # fill features with user vector
-    feature.extend(get_one_feature(Counter(user[1].split("/")), user_tags))
-    ## can be replaced by cluster ids
-    feature.extend(get_one_feature(Counter(user[2].split("/")), user_word_id))
-    ## can be replaced by cluster ids
-    feature.extend(get_one_feature(Counter(user[3].split("/")), user_char_id))
+    #append user feature
+    feature.extend(get_user_feature(user))
     
     return feature
   

@@ -31,7 +31,7 @@ print len(test_features)
 
 test_labels = clf.predict(test_features)
 
-res = open("validate_label.txt", "w")
+res = open("validate_label.csv", "w")
 
 count = 0
 with open("../../bytecup2016data/validate_nolabel.txt") as f:

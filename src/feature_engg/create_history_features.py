@@ -27,14 +27,13 @@ class UserHistory:
         ans_tags = Counter([])
         for ques in self.question_ans:
             ans_tags.update(simp.get_user_tag(simp.questions[ques]))
-        
-        feature.extend(simp.get_one_feature(ans_tags, simp.question_tags))
           
         not_ans_tags = Counter([])
         for ques in self.question_not_ans:
             not_ans_tags.update(simp.get_user_tag(simp.questions[ques]))
         
-        feature.extend(simp.get_one_feature(not_ans_tags, simp.question_tags))
+        ans_tags.subtract(not_ans_tags)
+        feature.extend(simp.get_one_feature(ans_tags, simp.question_tags))
         
         return feature
 
@@ -64,14 +63,13 @@ class QuesHistory:
         ans_tags = Counter([])
         for user in self.user_ans:
             ans_tags.update(simp.get_user_tag(simp.users[user]))
-        
-        feature.extend(simp.get_one_feature(ans_tags, simp.user_tags))
-         
+                 
         not_ans_tags = Counter([])
         for user in self.user_not_ans:
             not_ans_tags.update(simp.get_user_tag(simp.users[user]))
         
-        feature.extend(simp.get_one_feature(not_ans_tags, simp.user_tags))
+        ans_tags.subtract(not_ans_tags)
+        feature.extend(simp.get_one_feature(ans_tags, simp.user_tags))
             
         return feature
             
@@ -123,8 +121,8 @@ def get_consolidated_feature_train(question, user):
 
 if __name__ == '__main__':
     
-    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e", '0')
-    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e", '1')
+    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
+    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
     
     
     

@@ -10,6 +10,7 @@ Q_nF_1    Q_nF_2    Q_nF_3    U_nF_1    U_nF_2    U_nF_3    U_nF_4    0
 from collections import Counter
 import cPickle as pickle
 
+INVITED_INFO_TRAIN = "../../bytecup2016data/invited_info_train_PROC.txt"
   
 # user id to user map
 users = {}
@@ -31,9 +32,6 @@ with open("../../bytecup2016data/user_info.txt") as f:
         user_char_id.update(user_data[3].split("/"))
         user_data = f.readline().strip().split("\t")
 
-# retaining top 500 features
-user_word_id = user_word_id.most_common(500)
-user_char_id = user_char_id.most_common(500)
 
 print "users", len(users)
 print "user_word_id", len(user_word_id) 
@@ -49,9 +47,6 @@ with open("../../bytecup2016data/question_info.txt") as f:
         question_char_id.update(question_data[3].split("/"))
         question_data = f.readline().strip().split("\t")
 
-# retaining top 500 features
-question_word_id = question_word_id.most_common(500)
-question_char_id = question_char_id.most_common(500)
 
 print "questions", len(questions)
 print "question_word_id", len(question_word_id) 
@@ -106,7 +101,16 @@ def get_full_feature(question, user):
 def main_fn():
     labels = []
     features = []
-    with open("../../bytecup2016data/invited_info_train.txt") as f:
+    
+    # retaining top 500 features
+    user_word_id = user_word_id.most_common()[100:600]
+    user_char_id = user_char_id.most_common()[100:600]
+    
+    # retaining top 500 features
+    question_word_id = question_word_id.most_common()[100:600]
+    question_char_id = question_char_id.most_common()[100:600]
+    
+    with open(INVITED_INFO_TRAIN) as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
             

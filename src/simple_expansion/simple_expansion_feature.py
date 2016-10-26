@@ -75,7 +75,12 @@ def get_user_feature(user):
     feature.extend(get_one_feature(Counter(user[3].split("/")), user_char_id))
     
     return feature
-    
+
+def get_user_tag(user):
+    return user[1].split("/")
+
+def get_question_tag(question):
+    return question[1].split("/")
 
 def get_full_feature(question, user):
     feature = []

@@ -18,22 +18,37 @@ class UserHistory:
     ## feature array format
     ## 0 -> num of question ans
     ## 1 -> num of question NOT ans
-    ## 2 -> tags of question ans
-    ## 3 -> tags of question NOT ans
-    def get_feature_train(self):
+    ## 2 -> num of time similar tags question ans
+    ## 3 -> num of time unsimilar tags question ans
+    ## 4 -> num of time similar tags question NOT ans
+    ## 5 -> num of time unsimilar tags question NOT ans
+    def get_feature_train(self, ques_asked):
         #TODO EXCLUDE TRAINING QUESTION BEFORE CALCULATING FEARURE
+        
+        # 0,1
         feature = [len(self.question_ans),len(self.question_not_ans) ]
-            
+        q_tag = simp.get_question_tag(simp.questions[ques_asked])[0]
+        
         ans_tags = Counter([])
         for ques in self.question_ans:
-            ans_tags.update(simp.get_user_tag(simp.questions[ques]))
+            print simp.questions[ques], simp.get_question_tag(simp.questions[ques])
+            ans_tags.update(simp.get_question_tag(simp.questions[ques]))
           
         not_ans_tags = Counter([])
         for ques in self.question_not_ans:
-            not_ans_tags.update(simp.get_user_tag(simp.questions[ques]))
+            not_ans_tags.update(simp.get_question_tag(simp.questions[ques]))
         
-        ans_tags.subtract(not_ans_tags)
-        feature.extend(simp.get_one_feature(ans_tags, simp.question_tags))
+        
+        # 2,3
+        feature.append(ans_tags[q_tag])
+        ans_tags[q_tag] = 0
+        feature.append(sum(ans_tags.values()))
+        
+        # 4,5
+        feature.append(not_ans_tags[q_tag])
+        not_ans_tags[q_tag] = 0
+        feature.append(sum(not_ans_tags.values()))
+        
         
         return feature
 
@@ -54,11 +69,15 @@ class QuesHistory:
     ## feature array format
     ## 0 -> num of user ans
     ## 1 -> num of user not ans
-    ## 2 -> tags of user ans
-    ## 3 -> tags of user NOT ans
-    def get_feature_train(self):
+    ## 2 -> num of time similar tag of user ans
+    ## 3 -> num of time unsimilar tag of user ans
+    ## 4 -> num of time similar tag of user NOT ans
+    ## 5 -> num of time unsimilar tag of user NOT ans
+    def get_feature_train(self, user_target):
         
         feature = [len(self.user_ans),len(self.user_not_ans)]
+        
+        u_tag = simp.get_user_tag(simp.users[user_target])
         
         ans_tags = Counter([])
         for user in self.user_ans:
@@ -68,9 +87,24 @@ class QuesHistory:
         for user in self.user_not_ans:
             not_ans_tags.update(simp.get_user_tag(simp.users[user]))
         
-        ans_tags.subtract(not_ans_tags)
-        feature.extend(simp.get_one_feature(ans_tags, simp.user_tags))
+        
+        # 2,3
+        sim_tag_ans = 0
+        for tag in u_tag:
+            sim_tag_ans+=ans_tags[tag]
+            ans_tags[tag] = 0
             
+        feature.append(sim_tag_ans)
+        feature.append(sum(ans_tags.values()))
+        
+        # 4,5
+        not_sim_tag_ans = 0
+        for tag in u_tag:
+            not_sim_tag_ans+=not_ans_tags[tag]
+            not_ans_tags[tag] = 0
+        
+        feature.append(not_sim_tag_ans)
+        feature.append(sum(not_ans_tags.values()))    
         return feature
             
 def get_history_feature():
@@ -114,8 +148,8 @@ def get_consolidated_feature_train(question, user):
     Return history feature for given user, question, label. History is calculated excluding current label.
     '''
     # simplify objects to feature
-    user_f = user_to_feature[user].get_feature_train()
-    question_f = ques_to_feature[question].get_feature_train()
+    user_f = user_to_feature[user].get_feature_train(question)
+    question_f = ques_to_feature[question].get_feature_train(user)
         
     return user_f + question_f
 

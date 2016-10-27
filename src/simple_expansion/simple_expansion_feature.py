@@ -75,9 +75,9 @@ def get_user_feature(user):
     feature = []
     # # fill features with user vector
     feature.extend(get_one_feature(Counter(user[1].split("/")), user_tags))
-    ## can be replaced by cluster ids
+    ## can be replaced by word cluster ids
     feature.extend(get_one_feature(Counter(user[2].split("/")), user_word_id))
-    ## can be replaced by cluster ids
+    ## can be replaced by char cluster ids
     feature.extend(get_one_feature(Counter(user[3].split("/")), user_char_id))
     
     return feature
@@ -98,6 +98,20 @@ def get_question_tag(question):
     '''
     return question[1].split("/")
 
+def get_question_char(question):
+    '''
+    :param question: question raw data
+    :return: list of char ids for this question
+    '''
+    return question[3].split("/")
+
+def get_user_char(user):
+    '''
+    :param user: user raw data
+    :return: list of char ids for this question
+    '''
+    return user[3].split("/")
+
 def get_full_feature(question, user):
     '''
 
@@ -109,9 +123,9 @@ def get_full_feature(question, user):
     # # fill features with question vector
     ## Fill tags
     feature.extend(get_one_feature(Counter(question[1].split("/")), question_tags))
-    ## can be replaced by cluster ids 
+    ## can be replaced by word cluster ids 
     feature.extend(get_one_feature(Counter(question[2].split("/")), question_word_id))
-    ## can be replaced by cluster ids
+    ## can be replaced by char cluster ids
     feature.extend(get_one_feature(Counter(question[3].split("/")), question_char_id))
     ## Fill #upvotes
     feature.append(int(question[4]) )

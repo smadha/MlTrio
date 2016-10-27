@@ -1,5 +1,7 @@
 from simple_expansion import simple_expansion_feature as simp
 from collections import Counter
+import numpy as np
+import mltrio_utils
 
 class UserHistory:
     'Class to store history based features for all users'
@@ -22,8 +24,9 @@ class UserHistory:
     ## 3 -> num of time unsimilar tags question ans
     ## 4 -> num of time similar tags question NOT ans
     ## 5 -> num of time unsimilar tags question NOT ans
+
     def get_feature_train(self, ques_asked):
-        #TODO EXCLUDE TRAINING QUESTION BEFORE CALCULATING FEARURE
+        #TODO EXCLUDE TRAINING QUESTION BEFORE CALCULATING FEATURE
         
         # 0,1
         feature = [len(self.question_ans),len(self.question_not_ans) ]
@@ -48,22 +51,58 @@ class UserHistory:
         feature.append(not_ans_tags[q_tag])
         not_ans_tags[q_tag] = 0
         feature.append(sum(not_ans_tags.values()))
-        
+
+        # 6,7
+        # TODO: do the same for SD, max, min, handle zero handling
+        L1_dist = 0.0
+        L2_dist = 0.0
+        for ques in self.question_ans:
+            L1_dist += mltrio_utils.get_L1_dist(simp.get_ques_feature(simp.questions[ques_asked]),
+                                   simp.get_ques_feature(simp.users[ques]))
+
+        for ques in self.question_ans:
+            L2_dist += mltrio_utils.get_L2_dist(simp.get_ques_feature(simp.questions[ques_asked]),
+                                   simp.get_ques_feature((simp.users[ques])))
+
+        feature.append(L1_dist / len(self.question_ans))
+        feature.append(L2_dist / len(self.question_ans))
+        L1_dist = 0.0
+        L2_dist = 0.0
+        for ques in self.question_not_ans:
+            L1_dist += mltrio_utils.get_L1_dist(simp.get_ques_feature(simp.questions[ques_asked]),
+                                   simp.get_ques_feature(simp.users[ques]))
+
+        for ques in self.question_not_ans:
+            L2_dist += mltrio_utils.get_L2_dist(simp.get_ques_feature(simp.questions[ques_asked]),
+                                   simp.get_ques_feature(simp.users[ques]))
+
+        feature.append(L1_dist / len(self.question_not_ans))
+        feature.append(L2_dist / len(self.question_not_ans))
         
         return feature
 
 class QuesHistory:
     'Class to store not history based features for all question'
-    user_ans = []
-    user_not_ans = []
+    user_ans = [] ##IDs of users who've answered this question
+    user_not_ans = [] ##
     def __init__(self):
         self.user_ans = []
         self.user_not_ans = []
 
     def add_user_ans(self, user):
+        '''
+
+        :param user: user ID
+        :return:
+        '''
         self.user_ans.append(user)
     
     def add_user_not_ans(self, user):
+        '''
+
+        :param user: user ID
+        :return:
+        '''
         self.user_not_ans.append(user)
         
     ## feature array format
@@ -73,8 +112,13 @@ class QuesHistory:
     ## 3 -> num of time unsimilar tag of user ans
     ## 4 -> num of time similar tag of user NOT ans
     ## 5 -> num of time unsimilar tag of user NOT ans
+
     def get_feature_train(self, user_target):
-        
+        '''
+
+        :param user_target: user ID
+        :return: all features based on this question and user ID
+        '''
         feature = [len(self.user_ans),len(self.user_not_ans)]
         
         u_tag = simp.get_user_tag(simp.users[user_target])
@@ -105,7 +149,33 @@ class QuesHistory:
         
         feature.append(not_sim_tag_ans)
         feature.append(sum(not_ans_tags.values()))    
+
+        # 6,7
+        # TODO: do the same for SD, max, min, handle zero error
+        L1_dist = 0.0
+        L2_dist = 0.0
+        for user in self.user_ans:
+            L1_dist += mltrio_utils.get_L1_dist(simp.get_user_feature(simp.users[user_target]),simp.get_user_feature(simp.users[user]))
+
+        for user in self.user_ans:
+            L2_dist += mltrio_utils.get_L2_dist(simp.get_user_feature(simp.users[user_target]),simp.get_user_feature((simp.users[user])))
+
+        feature.append(L1_dist/len(self.user_ans))
+        feature.append(L2_dist/len(self.user_ans))
+        L1_dist = 0.0
+        L2_dist = 0.0
+        for user in self.user_not_ans:
+            L1_dist += mltrio_utils.get_L1_dist(simp.get_user_feature(simp.users[user_target]), simp.get_user_feature(simp.users[user]))
+
+        for user in self.user_not_ans:
+            L2_dist += mltrio_utils.get_L2_dist(simp.get_user_feature(simp.users[user_target]), simp.get_user_feature(simp.users[user]))
+
+        feature.append(L1_dist / len(self.user_not_ans))
+        feature.append(L2_dist / len(self.user_not_ans))
+
         return feature
+
+
             
 def get_history_feature():
     '''
@@ -157,6 +227,9 @@ if __name__ == '__main__':
     
     print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
     print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
-    
-    
+    qh = QuesHistory()
+    qh.add_user_ans("7b4f71989c4cefb93a1c639940aa032e")
+
+    print qh.get_feature_train("7b4f71989c4cefb93a1c639940aa032e")
+
     

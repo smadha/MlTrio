@@ -65,7 +65,13 @@ def get_one_feature(item_set, global_set):
     
     return feature_one
 
+
 def get_user_feature(user):
+    '''
+
+    :param user: user raw data
+    :return: user features
+    '''
     feature = []
     # # fill features with user vector
     feature.extend(get_one_feature(Counter(user[1].split("/")), user_tags))
@@ -77,12 +83,28 @@ def get_user_feature(user):
     return feature
 
 def get_user_tag(user):
+    '''
+
+    :param user: user raw data
+    :return: list of user tags
+    '''
     return user[1].split("/")
 
 def get_question_tag(question):
+    '''
+
+    :param question: question raw data
+    :return: list of question tags
+    '''
     return question[1].split("/")
 
 def get_full_feature(question, user):
+    '''
+
+    :param question: question ID
+    :param user: user ID
+    :return:
+    '''
     feature = []
     # # fill features with question vector
     ## Fill tags

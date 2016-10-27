@@ -5,7 +5,6 @@ compute Cartesian product of user and question characters
 from collections import Counter
 from simple_expansion import simple_expansion_feature as simp
 import cPickle as pickle
-
 # Each class has it's own Counter to keep track of pair frequency in that class
 pairs_class_i = [Counter([]), Counter([])]
 list_all_pairs = []
@@ -40,7 +39,7 @@ with open(simp.INVITED_INFO_TRAIN) as f:
         count += 1
         if(count % 1000) == 0:
             print count, "processed"
-            break
+            
 
 
 
@@ -58,9 +57,10 @@ for pair in list_all_pairs:
     score = 1.0 * (freq_0 - freq_1) / sum([freq_0,freq_1])
     pair_score[pair] = score
     
-        
+
 print len(pair_score)
 print len(list_all_pairs)
 
-pickle.dump( pair_score, open("./feature/distinguish_char.p", "wb") )
+pickle.dump( pair_score, open("./feature/distinguish_char.p", "wb"), protocol=2 )
+
 

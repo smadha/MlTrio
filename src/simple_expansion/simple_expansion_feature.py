@@ -83,6 +83,27 @@ def get_user_feature(user):
     return feature
 
 
+def get_ques_feature(question):
+    '''
+
+    :param ques: ques raw data
+    :return: ques features
+    '''
+
+    feature = []
+    feature.extend(get_one_feature(Counter(question[1].split("/")), question_tags))
+    ## can be replaced by cluster ids
+    feature.extend(get_one_feature(Counter(question[2].split("/")), question_word_id))
+    ## can be replaced by cluster ids
+    feature.extend(get_one_feature(Counter(question[3].split("/")), question_char_id))
+    ## Fill #upvotes
+    feature.append(int(question[4]))
+    ## Fill #answers
+    feature.append(int(question[5]))
+    ## Fill #top quality answers
+    feature.append(int(question[6]))
+
+
 def get_user_tag(user):
     '''
 
@@ -113,24 +134,6 @@ def get_user_char(user):
     '''
     return user[3].split("/")
 
-def get_question_feature(question):
-
-    feature = []
-    # # fill features with question vector
-    ## Fill tags
-    feature.extend(get_one_feature(Counter(question[1].split("/")), question_tags))
-    ## can be replaced by cluster ids 
-    feature.extend(get_one_feature(Counter(question[2].split("/")), question_word_id))
-    ## can be replaced by cluster ids
-    feature.extend(get_one_feature(Counter(question[3].split("/")), question_char_id))
-    ## Fill #upvotes
-    feature.append(int(question[4]) )
-    ## Fill #answers
-    feature.append(int(question[5]) )
-    ## Fill #top quality answers
-    feature.append(int(question[6]) )
-       
-    return feature
     
 
 def get_full_feature(question, user):
@@ -143,7 +146,7 @@ def get_full_feature(question, user):
     feature = []
     # # fill features with question vector
     ## Fill tags
-    feature.extend(get_question_feature(question))
+    feature.extend(get_ques_feature(question))
     
     #append user feature
     feature.extend(get_user_feature(user))

@@ -1,5 +1,5 @@
 import dbscan_clustering
-from  src.simple_expansion.simple_expansion_feature import get_question_feature, questions
+from  src.simple_expansion.simple_expansion_feature import get_ques_feature, questions
 import cPickle as pickle
 
 def build_ques_data():
@@ -7,7 +7,7 @@ def build_ques_data():
     for key in questions.keys():
         #print smple_exp.users[key]
         question = questions[key]
-        ques_features_list.append(get_question_feature(question))
+        ques_features_list.append(get_ques_feature(question))
 
     return ques_features_list
 

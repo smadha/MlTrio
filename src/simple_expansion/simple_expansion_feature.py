@@ -82,6 +82,27 @@ def get_user_feature(user):
     
     return feature
 
+def get_ques_feature(question):
+    '''
+
+    :param ques: ques raw data
+    :return: ques features
+    '''
+
+    feature = []
+    feature.extend(get_one_feature(Counter(question[1].split("/")), question_tags))
+    ## can be replaced by cluster ids
+    feature.extend(get_one_feature(Counter(question[2].split("/")), question_word_id))
+    ## can be replaced by cluster ids
+    feature.extend(get_one_feature(Counter(question[3].split("/")), question_char_id))
+    ## Fill #upvotes
+    feature.append(int(question[4]))
+    ## Fill #answers
+    feature.append(int(question[5]))
+    ## Fill #top quality answers
+    feature.append(int(question[6]))
+
+
 def get_user_tag(user):
     '''
 

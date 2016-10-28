@@ -8,8 +8,8 @@ def get_best_histogram():
 
 pair_score = pickle.load(open("../feature_engg/feature/distinguish_char.p", "r"))
 hist, bins = get_best_histogram()
-print hist
-print len(hist), len(bins)
+
+print "Length of histogram feature ",len(hist), len(bins)
 def get_feature(pair_list):
     '''
     Given list of pair calculates a vector by using histogram

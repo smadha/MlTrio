@@ -256,14 +256,22 @@ def get_consolidated_feature_train(question_id, user_id):
     Return history feature for given user_id, question_id, label. History is calculated excluding current label.
     '''
     # simplify objects to feature
-    user_f = user_to_feature[user_id].get_feature_train(question_id)
-    question_f = ques_to_feature[question_id].get_feature_train(user_id)
+    if user_id in user_to_feature:
+        user_f = user_to_feature[user_id].get_feature_train(question_id)
+    else :
+        print "unknown user"
+        user_f = [0] * 6 
+    if question_id in ques_to_feature:
+        question_f = ques_to_feature[question_id].get_feature_train(user_id)
+    else :
+        print "unknown question"
+        question_f = [0] * 6
         
     return user_f + question_f
 
 if __name__ == '__main__':
     
-    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
+    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "18ef078c925908094fa5302805a71cac")
     print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
     qh = QuesHistory()
     qh.add_user_ans("7b4f71989c4cefb93a1c639940aa032e")

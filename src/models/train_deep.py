@@ -47,7 +47,7 @@ def transform_label():
     if label = 1 [0, 1]
     if label = 0 [1, 0]
     '''
-    labels = pickle.load( open("./feature_engg/feature/labels.p", "rb") )
+    labels = pickle.load( open("../feature_engg/feature/labels.p", "rb") )
     labels_new = []
     for label in labels:
         label_new = [0,0]
@@ -56,7 +56,7 @@ def transform_label():
     
     return labels_new
 
-features = pickle.load( open("./feature_engg/feature/all_features.p", "rb") )
+features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
 labels = transform_label()
 
 print len(features),len(features[0])
@@ -69,7 +69,7 @@ eStop = True
 sgd_Nesterov = True
 sgd_lr = 5e-4
 sgd_decay = 5e-05
-arch = [len(features[0]),1024,512,256,2]
+arch = [len(features[0]),256,512,256,2]
 batch_size=1000
 nb_epoch=50
 verbose=True

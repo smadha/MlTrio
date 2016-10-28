@@ -157,13 +157,14 @@ def main_fn():
     labels = []
     features = []
     
-    # retaining top 500 features
-    user_word_id = user_word_id.most_common()[100:600]
-    user_char_id = user_char_id.most_common()[100:600]
-    
-    # retaining top 500 features
-    question_word_id = question_word_id.most_common()[100:600]
-    question_char_id = question_char_id.most_common()[100:600]
+#     # retaining top 500 features
+#     global user_word_id, user_word_id, question_word_id, question_char_id
+#     user_word_id = user_word_id.most_common()[100:600]
+#     user_word_id = user_char_id.most_common()[100:600]
+#     
+#     # retaining top 500 features
+#     question_word_id = question_word_id.most_common()[100:600]
+#     question_char_id = question_char_id.most_common()[100:600]
     
     with open(INVITED_INFO_TRAIN) as f:
         training_data = f.readline().strip().split("\t")

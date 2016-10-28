@@ -21,7 +21,8 @@ def get_feature(pair_list):
     set_indices = np.digitize(pair_list_score, bins)
     feature_vec = [0]*len(bins)
     for set_index in set_indices:
-        feature_vec[set_index-1]+=1
+        if hist[set_index-1] == 0 : continue 
+        feature_vec[set_index-1] += 1.0 / (hist[set_index-1])
     
     return feature_vec
     

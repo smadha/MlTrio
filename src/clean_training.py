@@ -8,9 +8,9 @@ def remove_duplicate_pair():
     with open("../bytecup2016data/invited_info_train.txt","r") as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
-            question = training_data[0]
-            user = training_data[1]
-            pair = (question,user)
+            question_id = training_data[0]
+            user_id = training_data[1]
+            pair = (question_id,user_id)
             label = training_data[2]
             if pair in valid_pair:
                 if label == '1' :

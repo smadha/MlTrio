@@ -8,19 +8,19 @@ def print_user_answered():
         while training_data and len(training_data) == 3 :
             label = training_data[2]
             if label == '1':
-                question = training_data[0]
-                user = training_data[1]
-                users_answered.update([user])
-                questions_answered.update([question])
+                question_id = training_data[0]
+                user_id = training_data[1]
+                users_answered.update([user_id])
+                questions_answered.update([question_id])
             
             training_data = f.readline().strip().split("\t")
             
-#     for user in users_answered.most_common():
-#         print user[0],  user[1]   
+#     for user_id in users_answered.most_common():
+#         print user_id[0],  user_id[1]   
 #     
     
-    for question in questions_answered.most_common():
-        print question[0],  question[1]   
+    for question_id in questions_answered.most_common():
+        print question_id[0],  question_id[1]   
             
         
 

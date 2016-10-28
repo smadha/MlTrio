@@ -102,6 +102,8 @@ def get_ques_feature(question):
     feature.append(int(question[5]))
     ## Fill #top quality answers
     feature.append(int(question[6]))
+    
+    return feature
 
 
 def get_user_tag(user):

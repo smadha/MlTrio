@@ -43,6 +43,7 @@ def get_full_feature(ques_id, user_id):
     return full_feature
     
 if __name__ == '__main__':
+    count = 0
     features = []
     labels = []
     with open(simp.INVITED_INFO_TRAIN) as f:
@@ -56,6 +57,10 @@ if __name__ == '__main__':
             labels.append(label)
 #             print len(features[0]),features[0]
             training_data = f.readline().strip().split("\t")
+            count += 1
+            print count
+            if count > 10:
+                break
             
     
     pickle.dump(features, open("./feature/all_features.p", "wb"), protocol=2 )

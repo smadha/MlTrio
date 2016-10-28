@@ -6,7 +6,7 @@ def get_best_histogram():
     return np.histogram(pair_score.values(), bins="auto") 
 
 
-pair_score = pickle.load(open("./feature/distinguish_char.p", "r"))
+pair_score = pickle.load(open("../feature_engg/feature/distinguish_char.p", "r"))
 hist, bins = get_best_histogram()
 
 def get_feature(pair_list):
@@ -15,7 +15,8 @@ def get_feature(pair_list):
     '''
     pair_list_score = []
     for pair in pair_list:
-        pair_list_score.append(pair_score[pair])
+        if pair in pair_score:
+            pair_list_score.append(pair_score[pair])
         
     set_indices = np.digitize(pair_list_score, bins)
     feature_vec = [0]*len(bins)

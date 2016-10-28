@@ -2,6 +2,9 @@ from simple_expansion import simple_expansion_feature as simp
 from collections import Counter
 import numpy as np
 import mltrio_utils
+import random
+
+MIN_NUM = 3
 
 class UserHistory:
     'Class to store history based features for all users'
@@ -56,11 +59,14 @@ class UserHistory:
         # TODO: do the same for SD, max, min
         L1_dist = 0.0
         L2_dist = 0.0
-        for ques in self.question_ans:
+        min_num = MIN_NUM
+        if len(self.question_ans) < min_num: min_num = len(self.question_ans) 
+        question_ans_rand = random.sample(set(self.question_ans), min_num)
+        for ques in question_ans_rand:
             L1_dist += mltrio_utils.get_L1_dist(simp.get_ques_feature(simp.questions[ques_asked]),
                                    simp.get_ques_feature(simp.questions[ques]))
 
-        for ques in self.question_ans:
+        for ques in question_ans_rand:
             L2_dist += mltrio_utils.get_L2_dist(simp.get_ques_feature(simp.questions[ques_asked]),
                                    simp.get_ques_feature((simp.questions[ques])))
         
@@ -69,15 +75,20 @@ class UserHistory:
             feature.append(1000)
             feature.append(1000)
         else:
-            feature.append(L1_dist / len(self.question_ans))
-            feature.append(L2_dist / len(self.question_ans))
+            feature.append(L1_dist / len(question_ans_rand))
+            feature.append(L2_dist / len(question_ans_rand))
+            
         L1_dist = 0.0
         L2_dist = 0.0
-        for ques in self.question_not_ans:
+        min_num = MIN_NUM
+        
+        if len(self.question_not_ans) < min_num: min_num = len(self.question_not_ans) 
+        question_not_ans_rand = random.sample(set(self.question_not_ans), min_num)
+        for ques in question_not_ans_rand:
             L1_dist += mltrio_utils.get_L1_dist(simp.get_ques_feature(simp.questions[ques_asked]),
                                    simp.get_ques_feature(simp.questions[ques]))
 
-        for ques in self.question_not_ans:
+        for ques in question_not_ans_rand:
             L2_dist += mltrio_utils.get_L2_dist(simp.get_ques_feature(simp.questions[ques_asked]),
                                    simp.get_ques_feature(simp.questions[ques]))
         
@@ -86,8 +97,8 @@ class UserHistory:
             feature.append(1000)
             feature.append(1000)
         else: 
-            feature.append(L1_dist / len(self.question_not_ans))
-            feature.append(L2_dist / len(self.question_not_ans))
+            feature.append(L1_dist / len(question_not_ans_rand))
+            feature.append(L2_dist / len(question_not_ans_rand))
         
         return feature
 
@@ -159,29 +170,47 @@ class QuesHistory:
         
         feature.append(not_sim_tag_ans)
         feature.append(sum(not_ans_tags.values()))    
-
+        
         # 6,7
         # TODO: do the same for SD, max, min, handle zero error
         L1_dist = 0.0
         L2_dist = 0.0
-        for user_id in self.user_ans:
+        min_num = MIN_NUM
+        if len(self.user_ans) < min_num: min_num = len(self.user_ans) 
+        user_ans_rand = random.sample(set(self.user_ans), min_num)
+        
+        for user_id in user_ans_rand:
             L1_dist += mltrio_utils.get_L1_dist(simp.get_user_feature(simp.users[user_target]),simp.get_user_feature(simp.users[user_id]))
 
-        for user_id in self.user_ans:
+        for user_id in user_ans_rand:
             L2_dist += mltrio_utils.get_L2_dist(simp.get_user_feature(simp.users[user_target]),simp.get_user_feature((simp.users[user_id])))
-
-        feature.append(L1_dist/len(self.user_ans))
-        feature.append(L2_dist/len(self.user_ans))
+            
+        if(len(self.user_ans) == 0):
+            feature.append(1000)
+            feature.append(1000)
+        else:
+            feature.append(L1_dist/len(user_ans_rand))
+            feature.append(L2_dist/len(user_ans_rand))
+        
         L1_dist = 0.0
         L2_dist = 0.0
-        for user_id in self.user_not_ans:
+        min_num = MIN_NUM
+        if len(self.user_not_ans) < min_num: min_num = len(self.user_not_ans) 
+        user_not_ans_rand = random.sample(set(self.user_not_ans), min_num)
+        
+        
+        for user_id in user_not_ans_rand:
             L1_dist += mltrio_utils.get_L1_dist(simp.get_user_feature(simp.users[user_target]), simp.get_user_feature(simp.users[user_id]))
 
-        for user_id in self.user_not_ans:
+        for user_id in user_not_ans_rand:
             L2_dist += mltrio_utils.get_L2_dist(simp.get_user_feature(simp.users[user_target]), simp.get_user_feature(simp.users[user_id]))
 
-        feature.append(L1_dist / len(self.user_not_ans))
-        feature.append(L2_dist / len(self.user_not_ans))
+        if(len(self.user_not_ans) == 0):
+            feature.append(1000)
+            feature.append(1000)
+        else:
+            feature.append(L1_dist / len(user_not_ans_rand))
+            feature.append(L2_dist / len(user_not_ans_rand))
 
         return feature
 

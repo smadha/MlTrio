@@ -8,10 +8,25 @@ import keras.regularizers as Reg
 from keras.optimizers import SGD
 from keras.callbacks import EarlyStopping
 import cPickle as pickle
+import numpy as np
 
 import theano
 theano.config.openmp = True
 OMP_NUM_THREADS=4 
+
+def normalize(X_tr):
+    ''' Normalize training and test data features
+    Args:
+        X_tr: Unnormalized training features
+    Output:
+        X_tr: Normalized training features
+    '''
+    X_mu = np.mean(X_tr, axis=0)
+    X_tr = X_tr - X_mu
+    X_sig = np.std(X_tr, axis=0)
+    X_tr = X_tr/X_sig
+    return X_tr
+
 
 
 def genmodel(num_units, actfn='relu', reg_coeff=0.0, last_act='softmax'):
@@ -62,6 +77,7 @@ labels = transform_label()
 print len(features),len(features[0])
 print len(labels),len(labels[0])
 
+features = normalize(features)
 
 reg_coeff = 1e-02
 momentum = 0.10

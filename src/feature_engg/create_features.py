@@ -41,7 +41,9 @@ def get_full_feature(ques_id, user_id):
     full_feature.extend(get_ques_user_similarity(user_id,ques_id))
     
     #Add user cluster
-    full_feature.extend(get_user_cluster_vector(user_id))
+#     full_feature.extend(get_user_cluster_vector(user_id))
+    user = simp.users[user_id]
+    full_feature.extend(simp.get_one_feature(Counter(simp.get_user_tag(user)), simp.user_tags))
     
     # Add tags
     question = simp.questions[ques_id]

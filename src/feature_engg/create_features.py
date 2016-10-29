@@ -2,8 +2,8 @@ from simple_expansion import simple_expansion_feature as simp
 import create_history_features as hist
 import create_character_feature as char
 from store_character_feature import get_char_pairs
+from clusters.get_user_cluster import get_user_cluster_vector
 from collections import Counter
-import numpy as np
 import mltrio_utils
 import cPickle as pickle
 
@@ -40,6 +40,19 @@ def get_full_feature(ques_id, user_id):
     full_feature.extend(char.get_feature(pair_list))
     full_feature.extend(get_ques_user_similarity(user_id,ques_id))
     
+    #Add user cluster
+    full_feature.extend(get_user_cluster_vector(user_id))
+    
+    # Add tags
+    question = simp.questions[ques_id]
+    full_feature.extend(simp.get_one_feature(Counter(simp.get_question_tag(question)), simp.question_tags))
+    ## Fill #upvotes
+    full_feature.append(int(question[4]))
+    ## Fill #answers
+    full_feature.append(int(question[5]))
+    ## Fill #top quality answers
+    full_feature.append(int(question[6]))
+
     return full_feature
     
 if __name__ == '__main__':

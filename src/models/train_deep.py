@@ -63,14 +63,14 @@ print len(features),len(features[0])
 print len(labels),len(labels[0])
 
 
-reg_coeff = 1e-07
-momentum = 0.95
+reg_coeff = 1e-02
+momentum = 0.10
 eStop = True
 sgd_Nesterov = True
 sgd_lr = 5e-4
 sgd_decay = 5e-05
-arch = [len(features[0]),256,512,256,2]
-batch_size=1000
+arch = [len(features[0]),1024,512,2]
+batch_size=50000
 nb_epoch=50
 verbose=True
 

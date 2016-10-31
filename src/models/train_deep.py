@@ -5,14 +5,14 @@ Uses flattened features in feature directory and run a SVM on it
 from keras.layers import Dense
 from keras.models import Sequential
 import keras.regularizers as Reg
-from keras.optimizers import SGD
+from keras.optimizers import SGD, RMSprop
 from keras.callbacks import EarlyStopping
 import cPickle as pickle
 import numpy as np
 
 import theano
 theano.config.openmp = True
-OMP_NUM_THREADS=4 
+OMP_NUM_THREADS=6 
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -65,8 +65,8 @@ def transform_label():
     labels = pickle.load( open("../feature_engg/feature/labels.p", "rb") )
     labels_new = []
     for label in labels:
-        label_new = [0,0]
-        label_new[int(label)]=1
+        label_new = [0.0,0.0]
+        label_new[int(label)]=1.0
         labels_new.append(label_new)
     
     return labels_new
@@ -77,13 +77,22 @@ labels = transform_label()
 print len(features),len(features[0])
 print len(labels),len(labels[0])
 
+features = np.array(features)
+
+col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
+#print col_deleted
+features = np.delete(features, col_deleted, axis=1)
+
+print len(features),len(features[0])
+print len(labels),len(labels[0])
+
 features = normalize(features)
 
 reg_coeff = 1e-02
-momentum = 0.10
+momentum = 0.1
 eStop = True
 sgd_Nesterov = True
-sgd_lr = 5e-4
+sgd_lr = 5e-2
 sgd_decay = 5e-05
 arch = [len(features[0]),1024,512,2]
 batch_size=50000
@@ -97,13 +106,12 @@ model = genmodel(num_units=arch, reg_coeff=reg_coeff )
 # Compile Model
 sgd = SGD(lr=sgd_lr, decay=sgd_decay, momentum=momentum, 
     nesterov=sgd_Nesterov)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, 
+
+# sgd = RMSprop(lr=sgd_lr, rho=0.9, epsilon=1e-08, decay=sgd_decay)
+
+model.compile(loss='MSE', optimizer=sgd, 
     metrics=['accuracy'])
 # Train Model
-model.fit(features, labels, nb_epoch=nb_epoch, batch_size=batch_size, 
-        verbose=verbose, callbacks=[call_ES], validation_split=0.1, 
-        validation_data=None, shuffle=True)
-
 if eStop:
     model.fit(features, labels, nb_epoch=nb_epoch, batch_size=batch_size, 
     verbose=verbose, callbacks=[call_ES], validation_split=0.1, 

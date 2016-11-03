@@ -12,7 +12,7 @@ import numpy as np
 
 import theano
 theano.config.openmp = True
-OMP_NUM_THREADS=6 
+OMP_NUM_THREADS=10 
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -25,7 +25,7 @@ def normalize(X_tr):
     X_tr = X_tr - X_mu
     X_sig = np.std(X_tr, axis=0)
     X_tr = X_tr/X_sig
-    return X_tr
+    return X_tr, X_mu, X_sig
 
 
 
@@ -86,7 +86,12 @@ features = np.delete(features, col_deleted, axis=1)
 print len(features),len(features[0])
 print len(labels),len(labels[0])
 
-features = normalize(features)
+features, X_mu, X_sig = normalize(features)
+
+save_res = {"col_deleted":col_deleted,"X_mu":X_mu,"X_sig":X_sig}
+with open("model/train_config", 'wb') as pickle_file:
+    pickle.dump(save_res, pickle_file, protocol=2)
+print "Dumped config"
 
 reg_coeff = 1e-02
 momentum = 0.1

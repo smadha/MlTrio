@@ -51,7 +51,7 @@ col_deleted=save_res["col_deleted"]
 test_features = np.array(test_features)
 test_features = np.delete(test_features, col_deleted, axis=1)
 
-test_features = normalize_test(test_features, col_deleted["X_mu"], col_deleted["X_sig"])
+test_features = normalize_test(test_features, save_res["X_mu"], save_res["X_sig"])
 print len(test_features)
 
 

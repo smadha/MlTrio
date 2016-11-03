@@ -93,12 +93,12 @@ with open("model/train_config", 'wb') as pickle_file:
     pickle.dump(save_res, pickle_file, protocol=2)
 print "Dumped config"
 
-reg_coeff = 1e-02
-momentum = 0.1
+reg_coeff = 1e-05
+momentum = 0.99
 eStop = True
 sgd_Nesterov = True
-sgd_lr = 5e-2
-sgd_decay = 5e-05
+sgd_lr = 1e-5
+sgd_decay = 1e-05
 arch = [len(features[0]),1024,512,2]
 batch_size=50000
 nb_epoch=50

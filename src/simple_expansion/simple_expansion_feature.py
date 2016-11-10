@@ -60,7 +60,7 @@ print "question_tags", len(question_tags)
     
 # retaining top 500 features
 #question_word_id = question_word_id.most_common(500)
-question_char_id = question_char_id.most_common(500)
+#question_char_id = question_char_id.most_common(500)
 
 def get_one_feature(item_set, global_set):
     '''

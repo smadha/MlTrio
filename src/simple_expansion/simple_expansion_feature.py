@@ -53,6 +53,15 @@ print "question_word_id", len(question_word_id)
 print "question_char_id", len(question_char_id)
 print "question_tags", len(question_tags)
 
+
+# retaining top 500 features
+#user_word_id = user_word_id.most_common(500)
+#user_char_id = user_char_id.most_common(500)
+    
+# retaining top 500 features
+#question_word_id = question_word_id.most_common(500)
+question_char_id = question_char_id.most_common(500)
+
 def get_one_feature(item_set, global_set):
     '''
     item_set - COUNTER of values present in current item
@@ -104,38 +113,6 @@ def get_ques_feature(question):
     feature.append(int(question[6]))
     
     return feature
-
-
-def get_user_tag(user):
-    '''
-
-    :param user: user raw data
-    :return: list of user tags
-    '''
-    return user[1].split("/")
-
-def get_question_tag(question):
-    '''
-
-    :param question: question raw data
-    :return: list of question tags
-    '''
-    return question[1].split("/")
-
-def get_question_char(question):
-    '''
-    :param question: question raw data
-    :return: list of char ids for this question
-    '''
-    return question[3].split("/")
-
-def get_user_char(user):
-    '''
-    :param user: user raw data
-    :return: list of char ids for this question
-    '''
-    return user[3].split("/")
-
     
 
 def get_full_feature(question, user):
@@ -159,14 +136,7 @@ def main_fn():
     labels = []
     features = []
     
-#     # retaining top 500 features
-#     global user_word_id, user_word_id, question_word_id, question_char_id
-#     user_word_id = user_word_id.most_common()[100:600]
-#     user_word_id = user_char_id.most_common()[100:600]
-#     
-#     # retaining top 500 features
-#     question_word_id = question_word_id.most_common()[100:600]
-#     question_char_id = question_char_id.most_common()[100:600]
+
     
     with open(INVITED_INFO_TRAIN) as f:
         training_data = f.readline().strip().split("\t")

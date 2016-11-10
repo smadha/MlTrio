@@ -1,6 +1,7 @@
-import dbscan_clustering
-from  src.simple_expansion.simple_expansion_feature import get_ques_feature, questions
+from  simple_expansion.simple_expansion_feature import get_ques_feature, questions
+from dbscan_clustering import run_DBScan
 import cPickle as pickle
+from distance_metric import create_metric_matrix
 
 def build_ques_data():
     ques_features_list = []
@@ -13,23 +14,26 @@ def build_ques_data():
 
 def build_ques_cluster_dict(db):
     
-    questions_cluster_dict = dict()
-    cluster_questions_dict = dict()
+    questionIDVs_clusterID_dict = dict()
+    clusterIDVs_questionId_dict = dict()
     i = 0
     for key in questions.keys():
         cluster_id = db.labels_[i]
-        questions_cluster_dict[key] = cluster_id
-        if cluster_id in cluster_questions_dict.keys() and (not cluster_questions_dict[cluster_id] is None):
-            cluster_questions_dict[cluster_id].append(key)
+        questionIDVs_clusterID_dict[key] = cluster_id
+        if cluster_id in clusterIDVs_questionId_dict.keys() and (not clusterIDVs_questionId_dict[cluster_id] is None):
+            clusterIDVs_questionId_dict[cluster_id].append(key)
         else:
-            cluster_questions_dict[cluster_id] = [key]
+            clusterIDVs_questionId_dict[cluster_id] = [key]
          
         i += 1   
-        
-    pickle.dump(cluster_questions_dict, open("cluster_ques_dict.p", "wb") )
-    pickle.dump(questions_cluster_dict, open("ques_cluster_dict.p", "wb") )
 
+    pickle.dump(clusterIDVs_questionId_dict, open("cluster_ques_dict.p", "wb"), protocol=2 )
+    pickle.dump(questionIDVs_clusterID_dict, open("ques_cluster_dict.p", "wb"), protocol=2 )
 
+print 'bilding data'
 ques_features_list = build_ques_data()
-db = dbscan_clustering.run_DBScan(ques_features_list)
-build_ques_cluster_dict(db)
+#print ques_features_list
+#print 'running DB scan & metric'
+#db = run_DBScan(ques_features_list)
+#build_ques_cluster_dict(db)
+create_metric_matrix(ques_features_list, "ques_features_metric.p", "l1")

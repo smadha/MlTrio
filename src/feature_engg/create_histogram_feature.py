@@ -10,10 +10,14 @@ pair_score = pickle.load(open("../feature_engg/feature/distinguish_char.p", "r")
 hist, bins = get_best_histogram()
 
 print "Length of histogram feature ",len(hist), len(bins)
-def get_feature(pair_list):
+def get_feature(pair_list, feature="char"):
     '''
+    @param pair_list: List of cross product features between user and question
+    @param feature: feature = char/tag
+     
     Given list of pair calculates a vector by using histogram
     '''
+    
     pair_list_score = []
     for pair in pair_list:
         if pair in pair_score:

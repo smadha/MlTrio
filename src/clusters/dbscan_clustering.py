@@ -2,7 +2,6 @@ from sklearn import metrics
 from sklearn.cluster import DBSCAN
 import numpy as np
 import timeit
-import cPickle as pickle
 
 def run_DBScan(features):
     

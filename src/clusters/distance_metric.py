@@ -15,7 +15,11 @@ def create_metric_matrix(feature_matrix, filename, metric):
     print 'running metric'
     #metrix_matrix = metrics.pairwise.pairwise_distances(feature_matrix, Y=None, metric='l1')
     metrix_matrix = metrics.pairwise.pairwise_distances(feature_matrix, Y=None, metric=metric)
+    print 'metric matrix size', np.shape(metrix_matrix)
     print 'Time taken to create metric data::', timeit.default_timer() - start_time
     np.savetxt(open(filename, 'w'), metrix_matrix, fmt='%.2f')
     #print 'metrix_matrix', metrix_matrix
     return metrix_matrix
+
+    
+    

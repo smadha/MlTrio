@@ -36,3 +36,4 @@ user_features_list = build_user_data()
 #db = run_DBScan(user_features_list)
 #build_similarity_matrix(db)
 distance_metric.create_metric_matrix(user_features_list, "user_similarity_metric.p", "l1")
+

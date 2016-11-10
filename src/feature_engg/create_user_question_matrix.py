@@ -1,3 +1,6 @@
+'''
+This file will compute a matrix USER X MATRIX based on questions a user answered
+'''
 from simple_expansion import simple_expansion_feature as simp
 import numpy as np
 
@@ -64,7 +67,7 @@ def get_user_feature(user_id):
     Returns a array of 0/1 for a user depending on question answered / not
     '''    
     if user_id not in user_to_idx:
-        return np.array((1,tot_ques))
+        return np.zeros((1,tot_ques))[0]
     user_idx = user_to_idx[user_id]
     
     return user_to_ques[user_idx]
@@ -75,7 +78,7 @@ def get_ques_feature(question_id):
     Returns a array of 0/1 for a question depending on user answered / not
     '''
     if question_id not in ques_to_idx:
-        return np.array((1,tot_users))
+        return np.zeros((1,tot_users))[0]
     
     question_idx = ques_to_idx[question_id]
     
@@ -83,5 +86,5 @@ def get_ques_feature(question_id):
 
 
 if __name__ == '__main__':
-    print get_ques_feature("d3b63d3e7efcc4c942751c4eddce3638")
-    print get_user_feature("7b4f71989c4cefb93a1c639940aa032e")
+    print len(get_ques_feature("d3b63d3e7efcc4c942751c4eddce3638"))
+    print len(get_user_feature("7b4f71989c4cefb93a1c639940aa032e")), len(get_user_feature("18ef078c925908094fa5302805a71cac"))

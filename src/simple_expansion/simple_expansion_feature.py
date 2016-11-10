@@ -113,7 +113,35 @@ def get_ques_feature(question):
     feature.append(int(question[6]))
     
     return feature
-    
+
+def get_user_tag(user):
+    '''
+    :param user: user raw data
+    :return: list of user tags
+    '''
+    return user[1].split("/")
+
+def get_question_tag(question):
+    '''
+    :param question: question raw data
+    :return: list of question tags
+    '''
+    return question[1].split("/")
+
+def get_question_char(question):
+    '''
+    :param question: question raw data
+    :return: list of char ids for this question
+    '''
+    return question[3].split("/")
+
+def get_user_char(user):
+    '''
+    :param user: user raw data
+    :return: list of char ids for this question
+    '''
+    return user[3].split("/")
+   
 
 def get_full_feature(question, user):
     '''

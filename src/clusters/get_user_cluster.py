@@ -40,6 +40,7 @@ if __name__ == '__main__':
 #     print len(cluster_user_dict), cluster_user_dict[-1]
 #     print len(users_cluster_dict), users_cluster_dict[users_cluster_dict.keys()[0]]
 #     print set(users_cluster_dict.values())
-    print get_distance_metric_for_user("f37635bcd54355ced64ff62b113bc692", "4588a1df2461674252ff01c63b59171a")
+    print get_distance_metric_for_user("f37635bcd54355ced64ff62b113bc692", "4588a1df2461674252ff01c63b59171a", "l1")
+    print get_distance_metric_for_user("f37635bcd54355ced64ff62b113bc692", "4588a1df2461674252ff01c63b59171a", "hamming")
     
     

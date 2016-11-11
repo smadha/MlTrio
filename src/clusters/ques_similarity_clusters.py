@@ -36,4 +36,5 @@ ques_features_list = build_ques_data()
 #print 'running DB scan & metric'
 #db = run_DBScan(ques_features_list)
 #build_ques_cluster_dict(db)
-create_metric_matrix(ques_features_list, "ques_features_metric.p", "l1")
+create_metric_matrix(ques_features_list, "ques_l1_similarity_metric.p", "l1")
+create_metric_matrix(ques_features_list, "ques_hamming_similarity_metric.p", "hamming")

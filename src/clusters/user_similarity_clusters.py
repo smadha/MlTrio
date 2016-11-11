@@ -1,7 +1,7 @@
 from  simple_expansion.simple_expansion_feature import get_user_feature, users
 from dbscan_clustering import run_DBScan
 import cPickle as pickle
-from clusters import distance_metric
+from distance_metric import create_metric_matrix
 
 def build_user_data():
     user_features_list = []
@@ -35,5 +35,6 @@ def build_similarity_matrix(db):
 user_features_list = build_user_data()
 #db = run_DBScan(user_features_list)
 #build_similarity_matrix(db)
-distance_metric.create_metric_matrix(user_features_list, "user_similarity_metric.p", "l1")
+create_metric_matrix(user_features_list, "user_l1_similarity_metric.p", "l1")
+create_metric_matrix(user_features_list, "user_hamming_similarity_metric.p", "hamming")
 

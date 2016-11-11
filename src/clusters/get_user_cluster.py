@@ -21,12 +21,15 @@ def get_user_cluster_vector(user_id):
     
     return vect
 
-def get_distance_metric_for_user(U1,U2):
+def get_distance_metric_for_user(U1,U2, metric):
     '''
         Returns a scalar value : distance measure between two users
     '''
-    
-    user_distance_metric  = np.genfromtxt(open('user_similarity_metric.p', 'r'))
+    if metric == 'l1':
+        user_distance_metric  = pickle.load(open('user_l1_similarity_metric.p', "rb") )
+    else:
+        user_distance_metric  = pickle.load(open('user_hamming_similarity_metric.p', "rb") )
+        
     u1_index = users.keys().index(U1)
     u2_index = users.keys().index(U2)
     

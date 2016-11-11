@@ -21,7 +21,7 @@ with open(simp.INVITED_INFO_TRAIN) as f:
     training_data = f.readline().strip().split("\t")
     while training_data and len(training_data) == 3 :
         label = training_data[2]
-        question_idx = training_data[0]
+        question_id = training_data[0]
         user_id = training_data[1]
         
         #Add user to dict if empty
@@ -29,8 +29,8 @@ with open(simp.INVITED_INFO_TRAIN) as f:
             user_to_idx[user_id] = max_user
             max_user+=1
              
-        if question_idx not in ques_to_idx: 
-            ques_to_idx[question_idx] = max_ques
+        if question_id not in ques_to_idx: 
+            ques_to_idx[question_id] = max_ques
             max_ques+=1
 
         training_data = f.readline().strip().split("\t")

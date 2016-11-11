@@ -97,3 +97,7 @@ bytecup2016data/
 *.p
 
 *.npy
+
+*.prefs
+
+recommender/.classpath

@@ -1,5 +1,5 @@
 '''
-compute Cartesian product of user_id and question_id characters 
+compute Cartesian product of user_id and question_id characters and tags
 '''
 
 from collections import Counter
@@ -74,9 +74,7 @@ if __name__ == '__main__':
                 if(count % 10000) == 0:
                     print count, "processed"
                     
-        
-        
-        
+                    
         #list_all_pairs is all possible list of pairs found training data
         list_all_pairs = set(pairs_class_i[0].keys() + pairs_class_i[1].keys())
         
@@ -92,8 +90,7 @@ if __name__ == '__main__':
             pair_score[pair] = score
             
         
-        print len(pair_score)
-        print len(list_all_pairs)
+        print "pairs generated for", len(pair_score)
         
         pickle.dump( pair_score, open("./feature/"+file_name, "wb"), protocol=2 )
     

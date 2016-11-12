@@ -29,9 +29,9 @@ def convert_to_csv():
                 ques_to_idx[question_id] = max_ques
                 max_ques+=1
             
-#             if label == "0": label="" 
-            if label == "1":  
-                mahout_file.write( "{0},{1}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
+            mahout_file.write( "{0},{1},{2}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
+#             if label == "1":  
+#                 mahout_file.write( "{0},{1}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
                             
             training_data = f.readline().strip().split("\t")
         f.close()
@@ -59,7 +59,6 @@ def convert_to_csv():
         mahout_test_file.close()
     
     print max_user, max_ques
-    print 6156
     cPickle.dump(user_to_idx, open("../bytecup2016data/user_to_idx.p","wb"), protocol=2)
     cPickle.dump(ques_to_idx, open("../bytecup2016data/ques_to_idx.p","wb"), protocol=2)
     

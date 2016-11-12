@@ -8,8 +8,11 @@ import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.eval.AverageAbsoluteDifferenceRecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
+import org.apache.mahout.cf.taste.impl.neighborhood.ThresholdUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericBooleanPrefUserBasedRecommender;
+import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.TanimotoCoefficientSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.UncenteredCosineSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.Recommender;
@@ -41,10 +44,11 @@ public class MahoutUserBasedRecommender implements RecommenderBuilder{
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
-		int [] num_neigh_arr = {700,1100};
+		int [] num_neigh_arr = {500, 700,1100};
+		double [] min_similarity_arr = {0.01, 0.3, 0.8, 1.5};
 		
 		for(int num_neigh : num_neigh_arr){
-			for(double min_similarity = 0.001; min_similarity<1.5; min_similarity += 0.1 ){
+			for(double min_similarity : min_similarity_arr ){
 				RecommenderBuilder builder = new MahoutUserBasedRecommender(num_neigh, min_similarity);
 				
 				double result = evaluator.evaluate(builder, null, model, 0.8, 0.8);
@@ -57,11 +61,11 @@ public class MahoutUserBasedRecommender implements RecommenderBuilder{
 	public Recommender buildRecommender(DataModel model) throws TasteException {
 
 //		TanimotoCoefficientSimilarity UncenteredCosineSimilarity  LogLikelihoodSimilarity
-		UserSimilarity similarity = new TanimotoCoefficientSimilarity(model);
+		UserSimilarity similarity = new UncenteredCosineSimilarity(model);
 		
-		UserNeighborhood neighborhood = new NearestNUserNeighborhood(num_neigh, similarity, model);
-//		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.3, similarity, model);
+		UserNeighborhood neighborhood = new NearestNUserNeighborhood(num_neigh,min_similarity, similarity, model);
+//		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(min_similarity, similarity, model);
 		
-		return new GenericBooleanPrefUserBasedRecommender(model, neighborhood, similarity);
+		return new GenericUserBasedRecommender(model, neighborhood, similarity);
 	}
 }

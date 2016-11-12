@@ -48,7 +48,7 @@ public class MahoutUserBasedRecommender implements RecommenderBuilder{
 		this.min_similarity = min_similarity;
 	}
 	public static void main(String[] args) throws Exception{
-		DataModel model = new FileDataModel(new File("/Users/madhav/Documents/workspace/ml/MlTrio/bytecup2016data/invited_info_train_mahout.csv"));
+		DataModel model = new FileDataModel(new File(Constants.INVITED_INFO_TRAIN_MAHOUT_CSV));
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
@@ -69,11 +69,11 @@ public class MahoutUserBasedRecommender implements RecommenderBuilder{
 	public Recommender buildRecommender(DataModel model) throws TasteException {
 
 //		TanimotoCoefficientSimilarity UncenteredCosineSimilarity  LogLikelihoodSimilarity
-		UserSimilarity similarity = new TanimotoCoefficientSimilarity(model);
+		UserSimilarity similarity = new UncenteredCosineSimilarity(model);
 		
 		UserNeighborhood neighborhood = new NearestNUserNeighborhood(num_neigh,min_similarity, similarity, model);
 //		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(min_similarity, similarity, model);
 		
-		return new GenericBooleanPrefUserBasedRecommender(model, neighborhood, similarity);
+		return new GenericUserBasedRecommender(model, neighborhood, similarity);
 	}
 }

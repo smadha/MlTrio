@@ -26,6 +26,13 @@ UncenteredCosineSimilarity
         0.0       0.91      0.95      0.93     30351
         1.0       0.43      0.27      0.33      4065
 
+LensKit
 avg / total       0.85      0.87      0.86     34416
 
+             precision    recall  f1-score   support
+
+        0.0       0.89      0.99      0.94     30351
+        1.0       0.73      0.12      0.20      4065
+
+avg / total       0.87      0.89      0.85     34416
 '''

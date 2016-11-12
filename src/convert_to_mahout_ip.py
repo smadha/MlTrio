@@ -6,7 +6,7 @@ def convert_to_csv():
     stores a mapping of id to int id
     '''
     mahout_file = open("../bytecup2016data/invited_info_train_mahout.csv","w")
-    mahout_test_file = open("../bytecup2016data/validate_nolabel_mahout.csv","w")
+    mahout_test_file = open("../bytecup2016data/test_nolabel_mahout.csv","w")
     
     # variable to construct user and ques features
     max_user = 0
@@ -14,7 +14,7 @@ def convert_to_csv():
     max_ques = 0
     ques_to_idx = {}
 
-    with open("../bytecup2016data/invited_info_train_PROC.txt","r") as f:
+    with open("../bytecup2016data/invited_info_train_PROC_tr.txt","r") as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
             question_id = training_data[0]
@@ -37,10 +37,10 @@ def convert_to_csv():
         f.close()
         mahout_file.close()
         
-    with open("../bytecup2016data/validate_nolabel.txt","r") as f:
+    with open("../bytecup2016data/invited_info_train_PROC_test.txt","r") as f:
         training_data = f.readline().strip().split(",")
         training_data = f.readline().strip().split(",")
-        while training_data and len(training_data) == 2 :
+        while training_data and len(training_data) >= 2 :
             question_id = training_data[0]
             user_id = training_data[1]
             

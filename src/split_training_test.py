@@ -17,5 +17,7 @@ if __name__ == '__main__':
             f.write("%s" % item)
     
     with open(test_file_name,"w") as f:
+        f.write("qid,uid,label\n")
         for item in test:
+            item = ",".join(item.split("\t"))
             f.write("%s" % item)

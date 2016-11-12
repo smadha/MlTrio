@@ -29,9 +29,9 @@ def convert_to_csv():
                 ques_to_idx[question_id] = max_ques
                 max_ques+=1
             
-            mahout_file.write( "{0},{1},{2}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
-#             if label == "1":  
-#                 mahout_file.write( "{0},{1}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
+#             mahout_file.write( "{0},{1},{2}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
+            if label == "1":  
+                mahout_file.write( "{0},{1}\n".format(user_to_idx[user_id], ques_to_idx[question_id], label) )
                             
             training_data = f.readline().strip().split("\t")
         f.close()

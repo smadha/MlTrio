@@ -18,7 +18,7 @@ public class MahoutPredictUserBasedRecommender {
 		DataModel model = new FileDataModel(
 				new File("/Users/madhav/Documents/workspace/ml/MlTrio/bytecup2016data/invited_info_train_mahout.csv"));
 
-		Recommender recommender = new MahoutUserBasedRecommender(700, 0.8).buildRecommender(model);
+		Recommender recommender = new MahoutUserBasedRecommender(1024, 0.01).buildRecommender(model);
 
 		String csvFile = "/Users/madhav/Documents/workspace/ml/MlTrio/bytecup2016data/validate_nolabel_mahout.csv";
 		String line = "";

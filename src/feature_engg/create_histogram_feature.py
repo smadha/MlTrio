@@ -2,7 +2,7 @@ import cPickle as pickle
 import matplotlib.pyplot as plt
 import numpy as np
 
-print "You have to run store_histogram_feature first "
+print "Run store_histogram_feature in case not done already"
 
 def get_best_histogram(pair_score):  
     return np.histogram(pair_score.values(), bins="auto") 
@@ -13,6 +13,9 @@ hist_char, bins_char = get_best_histogram(pair_score_char)
 
 pair_score_tag = pickle.load(open("../feature_engg/feature/distinguish_tag.p", "r"))
 hist_tag, bins_tag = get_best_histogram(pair_score_tag)
+
+# pair_score_word = pickle.load(open("../feature_engg/feature/distinguish_word.p", "r"))
+# hist_word, bins_word = get_best_histogram(pair_score_word)
 
 
 def get_feature(pair_list, feature="char"):
@@ -54,8 +57,10 @@ def plot_histogram(x, var_name, bins=10):
     plt.savefig(var_name, linewidth=0)
     plt.close()
 
-def plot_best_histogram():
-    hist, bins = get_best_histogram()
+def plot_best_histogram(pair_score):
+    hist, bins = get_best_histogram(pair_score)
+    
+    print hist, bins
     
     width = 0.7 * (bins[1] - bins[0])
     center = (bins[:-1] + bins[1:]) / 2
@@ -67,12 +72,12 @@ def plot_best_histogram():
     
 
 if __name__ == '__main__':
-    # for bins in range(0,151,10):
-    #     if bins == 0:
-    #         bins = 10
-    #     plot_histogram(pair_score.values(), str(bins) + "-freq_0-freq_1", bins)
-    
-#     plot_best_histogram(pair_score.values())
+#     for bins in range(0,151,10):
+#         if bins == 0:
+#             bins = 10
+#         plot_histogram(pair_score_word.values(), str(bins) + "-freq_0-freq_1-word", bins)
+#     
+    plot_best_histogram(pair_score_tag)
     
     print list(np.digitize([-1,-1,-0.5,0,0.5,1], bins_tag))
     print list(np.digitize([-1,-1,-0.5,0,0.5,1], bins_char))

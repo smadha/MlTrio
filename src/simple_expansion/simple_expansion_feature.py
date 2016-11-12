@@ -142,6 +142,20 @@ def get_user_char(user):
     '''
     return user[3].split("/")
    
+def get_question_words(question):
+    '''
+    :param question: question raw data
+    :return: list of char ids for this question
+    '''
+    return question[2].split("/")
+
+def get_user_words(user):
+    '''
+    :param user: user raw data
+    :return: list of char ids for this question
+    '''
+    return user[2].split("/")
+   
 
 def get_full_feature(question, user):
     '''

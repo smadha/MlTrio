@@ -24,11 +24,19 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
  * Neigh - 110 Acc - 0.6675216277313736
  * Neigh - 710 Acc - 0.6682084557050264
  * 
- * Neigh - 100 min_similarity - 2.401000000000001 Acc - 0.6735679866561057
- * Neigh - 100 min_similarity - 0.8009999999999999 Acc - 0.6751737932823109
- * Neigh - 700 min_similarity - 0.101 Acc - 0.670136541986574
- * Neigh - 700 min_similarity - 0.8009999999999999 Acc - 0.6814502761120604 	BEST
- * Neigh - 1100 min_similarity - 0.30100000000000005 Acc - 0.6721438656928943
+ * Neigh - 64 min_similarity - 0.0 Acc - 0.6498210621159797
+ * Neigh - 64 min_similarity - 0.01 Acc - 0.6641040001442645
+ * Neigh - 64 min_similarity - 0.05 Acc - 0.6438712743672923
+ * Neigh - 128 min_similarity - 0.0 Acc - 0.6615997598185176
+ * Neigh - 128 min_similarity - 0.01 Acc - 0.6568353151610219
+ * Neigh - 128 min_similarity - 0.05 Acc - 0.6634960395791719
+ * Neigh - 512 min_similarity - 0.0 Acc - 0.6680383943763619
+ * Neigh - 512 min_similarity - 0.01 Acc - 0.6574531099672709
+ * Neigh - 512 min_similarity - 0.05 Acc - 0.6592442161957328
+ * Neigh - 1024 min_similarity - 0.0 Acc - 0.6468725403075101
+ * Neigh - 1024 min_similarity - 0.01 Acc - 0.6512808289717522
+ * Neigh - 1024 min_similarity - 0.05 Acc - 0.6536606152690998
+ * 
  * Similarity TanimotoCoefficientSimilarity
  */
 public class MahoutUserBasedRecommender implements RecommenderBuilder{
@@ -44,8 +52,8 @@ public class MahoutUserBasedRecommender implements RecommenderBuilder{
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
-		int [] num_neigh_arr = {500, 700,1100};
-		double [] min_similarity_arr = {0.01, 0.3, 0.8, 1.5};
+		int [] num_neigh_arr = {64,128,512,1024};
+		double [] min_similarity_arr = {0.0, 0.01, 0.05};
 		
 		for(int num_neigh : num_neigh_arr){
 			for(double min_similarity : min_similarity_arr ){
@@ -61,11 +69,11 @@ public class MahoutUserBasedRecommender implements RecommenderBuilder{
 	public Recommender buildRecommender(DataModel model) throws TasteException {
 
 //		TanimotoCoefficientSimilarity UncenteredCosineSimilarity  LogLikelihoodSimilarity
-		UserSimilarity similarity = new UncenteredCosineSimilarity(model);
+		UserSimilarity similarity = new TanimotoCoefficientSimilarity(model);
 		
 		UserNeighborhood neighborhood = new NearestNUserNeighborhood(num_neigh,min_similarity, similarity, model);
 //		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(min_similarity, similarity, model);
 		
-		return new GenericUserBasedRecommender(model, neighborhood, similarity);
+		return new GenericBooleanPrefUserBasedRecommender(model, neighborhood, similarity);
 	}
 }

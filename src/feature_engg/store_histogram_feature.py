@@ -46,8 +46,21 @@ def get_tag_pairs(question_id, user_id):
             
     return pairs
 
+def get_word_pairs(question_id, user_id):
+    '''
+    Get all possible word pairs between words in question_id, user_id
+    '''
+    user_chars = simp.get_user_words(simp.users[user_id])
+    ques_chars = simp.get_question_words(simp.questions[question_id])
+    pairs = []
+    for user_char in user_chars:
+        for ques_char in ques_chars:
+            pairs.append((user_char, ques_char))
+            
+    return pairs
+
 if __name__ == '__main__':
-    pair_features = [("distinguish_tag.p",get_tag_pairs), ("distinguish_char.p",get_char_pairs)]
+    pair_features = [("distinguish_tag.p",get_tag_pairs), ("distinguish_char.p",get_char_pairs),("distinguish_word.p",get_word_pairs)]
     
     for file_name, get_pairs in pair_features:
         # Each class has it's own Counter to keep track of pair frequency in that class
@@ -78,9 +91,9 @@ if __name__ == '__main__':
         #list_all_pairs is all possible list of pairs found training data
         list_all_pairs = set(pairs_class_i[0].keys() + pairs_class_i[1].keys())
         
-        print "Unique char pairs in class0", len(pairs_class_i[0])
-        print "Unique char pairs in class1", len(pairs_class_i[1])
-        print "Unique char pairs in training data", len(list_all_pairs)
+        print "Unique ",file_name," pairs in class0", len(pairs_class_i[0])
+        print "Unique ",file_name," pairs in class1", len(pairs_class_i[1])
+        print "Unique ",file_name," pairs in training data", len(list_all_pairs)
         
         
         for pair in list_all_pairs:

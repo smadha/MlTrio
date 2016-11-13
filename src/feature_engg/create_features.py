@@ -1,7 +1,7 @@
 from simple_expansion import simple_expansion_feature as simp
 import create_history_features as hist
-import create_character_feature as char
-from store_character_feature import get_char_pairs
+import create_histogram_feature as hist_feat
+from store_histogram_feature import get_char_pairs, get_tag_pairs
 from clusters.get_user_cluster import get_user_cluster_vector
 from collections import Counter
 import mltrio_utils
@@ -35,13 +35,19 @@ def get_full_feature(ques_id, user_id):
     :return: feature combining all hand created features in this package
     '''
     full_feature = []
-    full_feature.extend(hist.get_consolidated_feature_train(ques_id, user_id))
-    pair_list = get_char_pairs(ques_id, user_id)
-    full_feature.extend(char.get_feature(pair_list))
+#     Commenting slow history feature
+#     full_feature.extend(hist.get_consolidated_feature_train(ques_id, user_id))
+    char_pair_list = get_char_pairs(ques_id, user_id)
+    full_feature.extend(hist_feat.get_feature(char_pair_list))
+    
+    tag_pair_list = get_tag_pairs(ques_id, user_id)
+    full_feature.extend(hist_feat.get_feature(tag_pair_list, feature="tag"))
+    
     full_feature.extend(get_ques_user_similarity(user_id,ques_id))
     
     #Add user cluster
 #     full_feature.extend(get_user_cluster_vector(user_id))
+    #Add user tags
     user = simp.users[user_id]
     full_feature.extend(simp.get_one_feature(Counter(simp.get_user_tag(user)), simp.user_tags))
     

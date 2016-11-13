@@ -4,7 +4,7 @@ import numpy as np
 import mltrio_utils
 import random
 
-MIN_NUM = 3
+MIN_NUM = 10
 user_user_sim_cache_L1 = {}
 user_user_sim_cache_L2 = {}
 ques_ques_sim_cache_L1 = {}

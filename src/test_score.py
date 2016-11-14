@@ -20,7 +20,7 @@ TanimotoCoefficientSimilarity
 avg / total       0.86      0.88      0.83     34416
 
 
-UncenteredCosineSimilarity
+UncenteredCosineSimilarity    0.381453716394342    
              precision    recall  f1-score   support
 
         0.0       0.91      0.95      0.93     30351
@@ -35,4 +35,12 @@ avg / total       0.85      0.87      0.86     34416
         1.0       0.73      0.12      0.20      4065
 
 avg / total       0.87      0.89      0.85     34416
+
+ItemSimilarity TanimotoCoefficientSimilarity    0.453558533820266    
+             precision    recall  f1-score   support
+
+        0.0       0.92      0.94      0.93     30351
+        1.0       0.48      0.38      0.42      4065
+
+avg / total       0.87      0.88      0.87     34416
 '''

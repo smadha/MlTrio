@@ -9,8 +9,8 @@ import java.util.List;
 public class GenerateTestPred {
 
 	public static void main(String[] args) throws Exception{
-		// LensKitRecommender MahoutPredictUserBasedRecommender MahoutPredictMatFactRecommender
-		Recommend rec  = new MahoutPredictMatFactRecommender();
+		// LensKitRecommender MahoutPredictUserBasedRecommender MahoutPredictMatFactRecommender MahoutPredictItemBasedRecommender
+		Recommend rec  = new MahoutPredictItemBasedRecommender();
 		
 		String csvFile = Constants.TEST_MAHOUT_CSV;
 		String line = "";
@@ -26,6 +26,7 @@ public class GenerateTestPred {
 
 		BufferedReader br = new BufferedReader(new FileReader(csvFile));
 		int count = 0;
+		double avg = 0;
 		while ((line = br.readLine()) != null) {
 			// use comma as separator
 			String[] userAndQues = line.split(cvsSplitBy);
@@ -42,6 +43,7 @@ public class GenerateTestPred {
 				pred = Constants.DEFAULT_VALUE;
 			}
 			max = Math.max(max, pred);
+			avg = (avg + pred)/2;
 
 			userIDList.add(userID);
 			quesIDList.add(quesID);
@@ -56,20 +58,27 @@ public class GenerateTestPred {
 
 		br.close();
 		
-		System.out.println(max);
+		System.out.println(max + " = " + avg);
 		for (int i = 0; i < userIDList.size(); i++) {
 
 			Long userID = userIDList.get(i);
 			Long quesID = quesIDList.get(i);
 			Double pred = predList.get(i);
+			
+			if (pred >= 0.5) {
+				pred = 0.5 + pred/(max*2);
+//				pred = pred/max;
 
-			pred = pred/max;
+			} else {
+				pred = pred/max;
+			}
+
 			// Done for making a classifier output
-//			if (pred >= 0.5) {
-//				pred = 1d;
-//			} else {
-//				pred = 0d;
-//			}
+			if (pred >= 0.5) {
+				pred = 1d;
+			} else {
+				pred = 0d;
+			}
 
 			DecimalFormat df = new DecimalFormat("#0.0000");
 

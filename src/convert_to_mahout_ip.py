@@ -14,7 +14,7 @@ def convert_to_csv():
     max_ques = 0
     ques_to_idx = {}
 
-    with open("../bytecup2016data/invited_info_train_PROC_tr.txt","r") as f:
+    with open("../bytecup2016data/invited_info_train_PROC.txt","r") as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
             question_id = training_data[0]
@@ -36,8 +36,9 @@ def convert_to_csv():
             training_data = f.readline().strip().split("\t")
         f.close()
         mahout_file.close()
-        
-    with open("../bytecup2016data/invited_info_train_PROC_test.txt","r") as f:
+    
+    #invited_info_train_PROC_test
+    with open("../bytecup2016data/validate_nolabel.txt","r") as f:
         training_data = f.readline().strip().split(",")
         training_data = f.readline().strip().split(",")
         while training_data and len(training_data) >= 2 :

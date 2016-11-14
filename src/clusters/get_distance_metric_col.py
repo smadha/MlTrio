@@ -9,7 +9,7 @@ from  simple_expansion.simple_expansion_feature import users
     and call get_distance_metric_for_user() method as directed in the init method below.
     
 """
-folder = "dist_data"
+folder = "../clusters/dist_data/"
  
 no_of_splits= 8
 
@@ -29,7 +29,7 @@ print 'size of l2 distance metric', np.shape(user_l2_distance_metric)
 
 
 def get_distance_metric_for_user(U1,U2, metric):
-    
+    print 'U1, U2', U1,'::', U2
     '''
         Returns a scalar value : distance measure between two users
     '''
@@ -37,10 +37,13 @@ def get_distance_metric_for_user(U1,U2, metric):
     u2_index = users.keys().index(U2)
     
     if metric== "l2":
-        return user_l2_distance_metric[u1_index][u2_index]
+        if((u1_index in user_l2_distance_metric) and (u2_index in user_l2_distance_metric[u1_index])):
+            return user_l2_distance_metric[u1_index][u2_index]
+        else: return 0
     else:
-        return user_hamming_distance_metric[u1_index][u2_index]
-
+        if((u1_index in user_hamming_distance_metric) and (u2_index in user_hamming_distance_metric[u1_index])):
+            return user_hamming_distance_metric[u1_index][u2_index]
+        else: return 0
     
 if __name__ == '__main__':
 

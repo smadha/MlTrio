@@ -11,7 +11,7 @@ from simple_expansion.simple_expansion_feature import questions
     
 """
 
-folder = "dist_data"
+folder = "../clusters/dist_data/"
 
 def get_distance_metric_for_ques(Q1,Q2, metric):
     '''
@@ -29,8 +29,10 @@ def get_distance_metric_for_ques(Q1,Q2, metric):
     q2_index = questions.keys().index(Q2)
     print q1_index, q2_index
     print np.shape(ques_distance_metric)
-    return ques_distance_metric[q1_index][q2_index]
-
+    
+    if((q1_index in ques_distance_metric) and (q2_index in ques_distance_metric[q1_index])):
+        return ques_distance_metric[q1_index][q2_index]
+    else: return 0
 
 if __name__ == '__main__':
 #     print len(cluster_user_dict), cluster_user_dict[-1]

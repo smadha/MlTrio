@@ -9,7 +9,7 @@ import java.util.List;
 public class GenerateTestPred {
 
 	public static void main(String[] args) throws Exception{
-		// LensKitRecommender
+		// LensKitRecommender MahoutPredictUserBasedRecommender MahoutPredictMatFactRecommender
 		Recommend rec  = new MahoutPredictMatFactRecommender();
 		
 		String csvFile = Constants.TEST_MAHOUT_CSV;
@@ -25,6 +25,7 @@ public class GenerateTestPred {
 		List<Double> predList = new ArrayList<Double>();
 
 		BufferedReader br = new BufferedReader(new FileReader(csvFile));
+		int count = 0;
 		while ((line = br.readLine()) != null) {
 			// use comma as separator
 			String[] userAndQues = line.split(cvsSplitBy);
@@ -45,6 +46,11 @@ public class GenerateTestPred {
 			userIDList.add(userID);
 			quesIDList.add(quesID);
 			predList.add(pred);
+			
+			count ++;
+			if (count%1000 == 0){
+				System.out.println("Processed " + count);
+			}
 
 		}
 

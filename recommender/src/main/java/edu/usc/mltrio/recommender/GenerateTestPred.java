@@ -10,7 +10,7 @@ public class GenerateTestPred {
 
 	public static void main(String[] args) throws Exception{
 		// LensKitRecommender
-		Recommend rec  = new MahoutPredictUserBasedRecommender();
+		Recommend rec  = new MahoutPredictMatFactRecommender();
 		
 		String csvFile = Constants.TEST_MAHOUT_CSV;
 		String line = "";

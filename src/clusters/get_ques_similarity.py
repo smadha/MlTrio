@@ -11,7 +11,7 @@ from simple_expansion.simple_expansion_feature import questions
     
 """
 
-folder = "/Users/arpita/MLTrioData/MlTrio_lfs/"
+folder = "dist_data"
 
 def get_distance_metric_for_ques(Q1,Q2, metric):
     '''

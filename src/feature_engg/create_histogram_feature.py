@@ -14,8 +14,8 @@ hist_char, bins_char = get_best_histogram(pair_score_char)
 pair_score_tag = pickle.load(open("../feature_engg/feature/distinguish_tag.p", "r"))
 hist_tag, bins_tag = get_best_histogram(pair_score_tag)
 
-# pair_score_word = pickle.load(open("../feature_engg/feature/distinguish_word.p", "r"))
-# hist_word, bins_word = plt.hist(pair_score_word.values(), bins=60)
+pair_score_word = pickle.load(open("../feature_engg/feature/distinguish_word.p", "r"))
+hist_word, bins_word = plt.hist(pair_score_word.values(), bins=60)
 
 
 def get_feature(pair_list, feature="char"):
@@ -33,6 +33,9 @@ def get_feature(pair_list, feature="char"):
     elif feature == "tag":
         pair_score = pair_score_tag
         bins = bins_tag
+    elif feature == "word":
+        pair_score = pair_score_word
+        bins = bins_word
         
     pair_list_score = []
     for pair in pair_list:

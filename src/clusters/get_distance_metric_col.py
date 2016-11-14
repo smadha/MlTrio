@@ -9,7 +9,7 @@ from  simple_expansion.simple_expansion_feature import users
     and call get_distance_metric_for_user() method as directed in the init method below.
     
 """
-folder = "/Users/arpita/MLTrioData/MlTrio_lfs/"
+folder = "dist_data"
  
 no_of_splits= 8
 

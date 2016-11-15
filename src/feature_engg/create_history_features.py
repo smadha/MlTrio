@@ -42,7 +42,7 @@ class UserHistory:
     question_not_ans = []
     def __init__(self):
         self.question_ans = []
-        self.question_not_ans = []
+        user_not_ansself.question_not_ans = []
         
     def add_ques_ans(self, ques):
         self.question_ans.append(ques)
@@ -59,7 +59,12 @@ class UserHistory:
     ## 5 -> num of time unsimilar tags question_id NOT ans
 
     def get_feature_train(self, ques_asked):
-        #TODO EXCLUDE TRAINING QUESTION BEFORE CALCULATING FEATURE
+        #EXCLUDE TRAINING QUESTION BEFORE CALCULATING FEATURE
+        if(ques_asked in self.question_ans):
+            self.question_ans.remove(ques_asked)
+        else:
+        #if(ques_asked in self.question_not_ans):
+            self.question_not_ans.remove(ques_asked)
         
         # 0,1
         feature = [len(self.question_ans),len(self.question_not_ans) ]
@@ -101,15 +106,15 @@ class UserHistory:
           
         # if len(self.question_ans) = 0 give a neg distance 
         if (len(self.question_ans) == 0): 
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
+            feature.append(0.05)
+            feature.append(0.05)
+            feature.append(0.05)
+            feature.append(0)
             
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
+            feature.append(500)
+            feature.append(500)
+            feature.append(500)
+            feature.append(0)
             
         else:
             feature.append(max(ham_dist))
@@ -197,6 +202,12 @@ class QuesHistory:
         :param user_target: user_id ID
         :return: all features based on this question_id and user_id ID
         '''
+        if(user_target in self.user_ans):
+            self.user_ans.remove(user_target)
+        else:
+        #if(user_target in self.user_not_ans):
+            self.user_not_ans.remove(user_target)
+            
         feature = [len(self.user_ans),len(self.user_not_ans)]
         
         u_tag = simp.get_user_tag(simp.users[user_target])
@@ -243,15 +254,15 @@ class QuesHistory:
                 ham_dist.append(ham_dist_i)
                 
         if(len(self.user_ans) == 0):
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
+            feature.append(0.005)
+            feature.append(0.005)
+            feature.append(0.005)
+            feature.append(0)
             
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
-            feature.append(-1)
+            feature.append(5)
+            feature.append(5)
+            feature.append(5)
+            feature.append(0)
             
         else:
             feature.append(max(ham_dist))

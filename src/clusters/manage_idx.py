@@ -25,7 +25,7 @@ question_train_idx = pickle.load(open(folder+"question_train_idx.p","r"))
 user_train_idx = pickle.load( open(folder + "user_train_idx.p","r"))
     
     
-# print users_all_idx.keys()[0]
-# print questions_all_idx.keys()[0]
-# print question_idx.keys()[0]
-# print user_idx.keys()[0]
+print "users_all_idx",len(users_all_idx)
+print "user_train_idx",len(user_train_idx)
+print "questions_all_idx",len(questions_all_idx)
+print "question_train_idx", len(question_train_idx)

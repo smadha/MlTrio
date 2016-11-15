@@ -42,7 +42,7 @@ class UserHistory:
     question_not_ans = []
     def __init__(self):
         self.question_ans = []
-        user_not_ansself.question_not_ans = []
+        self.question_not_ans = []
         
     def add_ques_ans(self, ques):
         self.question_ans.append(ques)

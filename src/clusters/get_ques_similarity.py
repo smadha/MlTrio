@@ -15,7 +15,9 @@ folder = "../clusters/dist_data/"
 
 ques_distance_metric_l2  = pickle.load(open(folder+"ques_l2_similarity_metric.p", "rb") )
 ques_distance_metric_ham  = pickle.load(open(folder+'ques_hamming_similarity_metric.p', "rb"))
-        
+
+print "Question similarity loaded"
+    
 def get_distance_metric_for_ques(Q1,Q2, metric):
     '''
         metric : expected values : l2 / hamming

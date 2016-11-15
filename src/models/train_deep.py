@@ -130,11 +130,13 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
             verbose=verbose, class_weight={0: class_weight_0 , 1:1})
     
     labels_pred = model.predict_classes(features_te)
-    y_true, y_pred = [ 0*l[0] + 1*l[1] for l in labels_te], [ 0*l[0] + 1*l[1] for l in labels_pred]
+    print labels_te[0], labels_pred[0]
+    y_true, y_pred = [ 0*l[0] + 1*l[1] for l in labels_te], labels_pred
     
-    print labels_te[0], labels_pred[0], y_true[0], y_pred[0]
-    report = classification_report(y_true, y_pred)
+    print y_true[0], y_pred[0]
     print "arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0
+
+    report = classification_report(y_true, y_pred)
     print report
     with open("results_nn.txt", "a") as f:
         f.write(report)

@@ -5,6 +5,7 @@ import mltrio_utils
 import random
 from clusters.get_distance_metric_col import get_distance_metric_for_user
 from clusters.get_ques_similarity import get_distance_metric_for_ques
+import time
 
 MIN_NUM = 10
 user_user_sim_cache_L1 = {}
@@ -327,12 +328,13 @@ def get_consolidated_feature_train(question_id, user_id):
     return user_f + question_f
 
 if __name__ == '__main__':
-    
+    print "Start",time.time()
     print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "18ef078c925908094fa5302805a71cac")
     print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
     qh = QuesHistory()
     qh.add_user_ans("7b4f71989c4cefb93a1c639940aa032e")
 
     print qh.get_feature_train("7b4f71989c4cefb93a1c639940aa032e")
+    print "End",time.time()
 
     

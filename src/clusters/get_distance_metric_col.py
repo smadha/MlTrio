@@ -1,6 +1,8 @@
 import cPickle as pickle
 import numpy as np
 from  simple_expansion.simple_expansion_feature import users
+from manage_idx import users_all_idx,questions_all_idx,question_train_idx,user_train_idx
+
 
 """
 
@@ -33,17 +35,14 @@ def get_distance_metric_for_user(U1,U2, metric):
     '''
         Returns a scalar value : distance measure between two users
     '''
-    u1_index = users.keys().index(U1)
-    u2_index = users.keys().index(U2)
     
     if metric== "l2":
-        if((u1_index in user_l2_distance_metric) and (u2_index in user_l2_distance_metric[u1_index])):
-            return user_l2_distance_metric[u1_index][u2_index]
-        else: return 0
+        return user_l2_distance_metric[users_all_idx[U1]][users_all_idx[U2]]
     else:
-        if((u1_index in user_hamming_distance_metric) and (u2_index in user_hamming_distance_metric[u1_index])):
-            return user_hamming_distance_metric[u1_index][u2_index]
-        else: return 0
+        if U1 not in user_train_idx or U2 not in user_train_idx :
+            return None 
+        return user_hamming_distance_metric[user_train_idx[U1]][user_train_idx[U2]]
+        
     
 if __name__ == '__main__':
 

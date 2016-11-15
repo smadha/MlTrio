@@ -1,7 +1,7 @@
 import numpy as np
 import cPickle as pickle
 from simple_expansion.simple_expansion_feature import questions
-
+from manage_idx import questions_all_idx,question_train_idx
 
 """
 
@@ -13,6 +13,9 @@ from simple_expansion.simple_expansion_feature import questions
 
 folder = "../clusters/dist_data/"
 
+ques_distance_metric_l2  = pickle.load(open(folder+"ques_l2_similarity_metric.p", "rb") )
+ques_distance_metric_ham  = pickle.load(open(folder+'ques_hamming_similarity_metric.p', "rb"))
+        
 def get_distance_metric_for_ques(Q1,Q2, metric):
     '''
         metric : expected values : l2 / hamming
@@ -20,19 +23,13 @@ def get_distance_metric_for_ques(Q1,Q2, metric):
     '''
 
     if metric == 'l2':
-        ques_distance_metric  = pickle.load(open(folder+"ques_l2_similarity_metric.p", "rb") )
+        ques_distance_metric_l2[questions_all_idx[Q1]][questions_all_idx[Q2]]
     else:
-        ques_distance_metric  = pickle.load(open(folder+'ques_hamming_similarity_metric.p', "rb"))
+        if Q1 not in question_train_idx or Q2 not in question_train_idx :
+            return None
+        ques_distance_metric_ham[question_train_idx[Q1]][question_train_idx[Q2]]
 
-    q1_index = questions.keys().index(Q1)
     
-    q2_index = questions.keys().index(Q2)
-    print q1_index, q2_index
-    print np.shape(ques_distance_metric)
-    
-    if((q1_index in ques_distance_metric) and (q2_index in ques_distance_metric[q1_index])):
-        return ques_distance_metric[q1_index][q2_index]
-    else: return 0
 
 if __name__ == '__main__':
 #     print len(cluster_user_dict), cluster_user_dict[-1]

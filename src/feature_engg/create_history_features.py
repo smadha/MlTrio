@@ -298,6 +298,8 @@ def get_history_feature():
 
 user_to_feature,ques_to_feature = get_history_feature()
 
+print "Number of users and questions in training data", len(user_to_feature) ,len(ques_to_feature)
+
 def get_consolidated_feature_train(question_id, user_id):
     '''
     Return history feature for given user_id, question_id, label. History is calculated excluding current label.

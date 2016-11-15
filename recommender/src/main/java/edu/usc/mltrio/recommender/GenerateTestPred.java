@@ -74,11 +74,11 @@ public class GenerateTestPred {
 			}
 
 			// Done for making a classifier output
-			if (pred >= 0.5) {
-				pred = 1d;
-			} else {
-				pred = 0d;
-			}
+//			if (pred >= 0.5) {
+//				pred = 1d;
+//			} else {
+//				pred = 0d;
+//			}
 
 			DecimalFormat df = new DecimalFormat("#0.0000");
 

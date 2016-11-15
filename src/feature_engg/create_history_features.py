@@ -86,7 +86,7 @@ class UserHistory:
 
         # 6,7
         # TODO: do the same for SD, max, min
-        ham_dist = []
+        ham_dist = [0]
         L2_dist = []
         min_num = MIN_NUM
         
@@ -94,7 +94,9 @@ class UserHistory:
         question_ans_rand = random.sample(set(self.question_ans), min_num)
         for ques in question_ans_rand:
             L2_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="l2"))
-            ham_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="hamming"))
+            ham_dist_i = ham_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="hamming"))
+            if ham_dist_i:
+                ham_dist.append(ham_dist_i)
           
         # if len(self.question_ans) = 0 give a higher distance 
         if (len(self.question_ans) == 0): 
@@ -111,7 +113,7 @@ class UserHistory:
             feature.append(np.mean(L2_dist))
             feature.append(np.std(L2_dist))
               
-        ham_dist = []
+        ham_dist = [0]
         L2_dist = []
         min_num = MIN_NUM
           
@@ -119,7 +121,9 @@ class UserHistory:
         question_not_ans_rand = random.sample(set(self.question_not_ans), min_num)
         for ques in question_not_ans_rand:
             L2_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="l2"))
-            ham_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="hamming"))
+            ham_dist_i = ham_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="hamming"))
+            if ham_dist_i:
+                ham_dist.append(ham_dist_i)
             
         # if len(self.question_not_ans) = 0 give a higher distance
         if(len(self.question_not_ans) == 0):
@@ -209,7 +213,7 @@ class QuesHistory:
         
         # 6,7,8,9 = max, min, std, mean L2 
         # 10,11,12,13 = max, min, std, mean L2
-        ham_dist = []
+        ham_dist = [0]
         L2_dist = []
         min_num = MIN_NUM
         if len(self.user_ans) < min_num: min_num = len(self.user_ans) 
@@ -217,8 +221,10 @@ class QuesHistory:
           
         for user_id in user_ans_rand:
             L2_dist.append(get_distance_metric_for_user(user_target, user_id, metric="l2"))
-            ham_dist.append(get_distance_metric_for_user(user_target, user_id, metric="hamming"))
-            
+            ham_dist_i = get_distance_metric_for_user(user_target, user_id, metric="hamming")
+            if ham_dist_i:
+                ham_dist.append(ham_dist_i)
+                
         if(len(self.user_ans) == 0):
             feature.append(1000)
             feature.append(1000)
@@ -234,7 +240,7 @@ class QuesHistory:
             feature.append(np.std(L2_dist))
             
          
-        ham_dist = []
+        ham_dist = [0]
         L2_dist = []
         min_num = MIN_NUM
         if len(self.user_not_ans) < min_num: min_num = len(self.user_not_ans) 
@@ -242,7 +248,9 @@ class QuesHistory:
          
         for user_id in user_not_ans_rand:
             L2_dist.append(get_distance_metric_for_user(user_target, user_id, metric="l2"))
-            ham_dist.append(get_distance_metric_for_user(user_target, user_id, metric="hamming"))
+            ham_dist_i = get_distance_metric_for_user(user_target, user_id, metric="hamming")
+            if ham_dist_i:
+                ham_dist.append(ham_dist_i)
  
         if(len(self.user_not_ans) == 0):
             feature.append(1000)

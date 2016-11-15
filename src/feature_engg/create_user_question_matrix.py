@@ -41,7 +41,7 @@ tot_ques = len(ques_to_idx)
 tot_users = len(user_to_idx)
 
 user_to_ques = np.zeros((tot_users,tot_ques))
-print user_to_ques.shape
+print "user_to_ques Matrix size ", user_to_ques.shape
 
 with open(simp.INVITED_INFO_TRAIN) as f:
     training_data = f.readline().strip().split("\t")
@@ -56,7 +56,6 @@ with open(simp.INVITED_INFO_TRAIN) as f:
     
     f.close()
 
-print "Answered ques- ", np.count_nonzero(user_to_ques)
 
 # np.save("feature/user_to_ques", user_to_ques)
 # 
@@ -88,3 +87,6 @@ def get_ques_feature(question_id):
 if __name__ == '__main__':
     print len(get_ques_feature("d3b63d3e7efcc4c942751c4eddce3638"))
     print len(get_user_feature("7b4f71989c4cefb93a1c639940aa032e")), len(get_user_feature("18ef078c925908094fa5302805a71cac"))
+    
+    
+    

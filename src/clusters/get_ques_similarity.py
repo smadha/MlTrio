@@ -16,7 +16,7 @@ folder = "../clusters/dist_data/"
 ques_distance_metric_l2  = pickle.load(open(folder+"ques_l2_similarity_metric.p", "rb") )
 ques_distance_metric_ham  = pickle.load(open(folder+'ques_hamming_similarity_metric.p', "rb"))
 
-print "Question similarity loaded"
+print "Question similarity loaded", len(ques_distance_metric_l2), len(ques_distance_metric_ham)
     
 def get_distance_metric_for_ques(Q1,Q2, metric):
     '''
@@ -25,11 +25,11 @@ def get_distance_metric_for_ques(Q1,Q2, metric):
     '''
 
     if metric == 'l2':
-        ques_distance_metric_l2[questions_all_idx[Q1]][questions_all_idx[Q2]]
+        return ques_distance_metric_l2[questions_all_idx[Q1]][questions_all_idx[Q2]]
     else:
         if Q1 not in question_train_idx or Q2 not in question_train_idx :
             return None
-        ques_distance_metric_ham[question_train_idx[Q1]][question_train_idx[Q2]]
+        return ques_distance_metric_ham[question_train_idx[Q1]][question_train_idx[Q2]]
 
     
 

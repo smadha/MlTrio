@@ -60,8 +60,7 @@ def get_word_pairs(question_id, user_id):
     return pairs
 
 if __name__ == '__main__':
-    #,("distinguish_word.p",get_word_pairs)
-    pair_features = [("distinguish_tag.p",get_tag_pairs), ("distinguish_char.p",get_char_pairs)]
+    pair_features = [("distinguish_tag.p",get_tag_pairs), ("distinguish_char.p",get_char_pairs), ("distinguish_word.p",get_word_pairs)]
     
     for file_name, get_pairs in pair_features:
         # Each class has it's own Counter to keep track of pair frequency in that class

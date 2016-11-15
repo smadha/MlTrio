@@ -2,7 +2,6 @@ from simple_expansion import simple_expansion_feature as simp
 import create_history_features as hist
 import create_histogram_feature as hist_feat
 from store_histogram_feature import get_char_pairs, get_tag_pairs, get_word_pairs
-from clusters.get_user_cluster import get_user_cluster_vector
 from collections import Counter
 import mltrio_utils
 import cPickle as pickle
@@ -36,7 +35,7 @@ def get_full_feature(ques_id, user_id):
     :return: feature combining all hand created features in this package
     '''
     full_feature = []
-#     Commenting slow history feature
+    # history feature
     full_feature.extend(hist.get_consolidated_feature_train(ques_id, user_id))
     
     char_pair_list = get_char_pairs(ques_id, user_id)

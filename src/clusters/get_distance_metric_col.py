@@ -1,7 +1,7 @@
 import cPickle as pickle
 import numpy as np
 from  simple_expansion.simple_expansion_feature import users
-from manage_idx import users_all_idx,questions_all_idx,question_train_idx,user_train_idx
+from manage_idx import users_all_idx,user_train_idx
 
 
 """

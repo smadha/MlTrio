@@ -108,7 +108,7 @@ verbose=True
 def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
     features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
     
-    call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
+    call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='auto')
     
     # Generate Model
     model = genmodel(num_units=arch, reg_coeff=reg_coeff )
@@ -152,9 +152,9 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
 
  
 arch_range = [[len(features[0]),1024,2], [len(features[0]),1024,512,2], [len(features[0]),1024,1024,512,2],[len(features[0]),1024,512,256,2]]
-reg_coeffs_range = [1e-7, 1e-6, 5e-6, 1e-5]
+reg_coeffs_range = [1e-5, 1, 5, 1e1, 1e2]
 sgd_decays_range = [1e-5, 5e-5, 1e-4]
-class_weight_0_range = [0.5,0.75, 0.9]
+class_weight_0_range = [0.25, 0.5,0.75]
 
 #GRID SEARCH ON BEST PARAM
 for arch in arch_range:

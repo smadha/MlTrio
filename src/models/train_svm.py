@@ -55,7 +55,7 @@ svr = SVC()
 
 parameters = [{ 'kernel':['rbf'], 'C':C_range, 'gamma':gamma_ramge}]
 
-clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=10)
+clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=10000)
 
 clf.fit(X_tr,y_tr)
 

@@ -14,7 +14,7 @@ from sklearn.metrics import classification_report
 
 import theano
 theano.config.openmp = True
-OMP_NUM_THREADS=22 
+OMP_NUM_THREADS=24 
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -153,7 +153,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
  
 arch_range = [[len(features[0]),1024,2], [len(features[0]),1024,512,2], [len(features[0]),1024,1024,512,2],[len(features[0]),1024,512,256,2]]
 reg_coeffs_range = [1e-5, 1, 5, 1e1, 1e2]
-sgd_decays_range = [1e-5, 5e-5, 1e-4]
+sgd_decays_range = [1e-5, 1e-2]
 class_weight_0_range = [0.25, 0.5,0.75]
 
 #GRID SEARCH ON BEST PARAM

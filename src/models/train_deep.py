@@ -80,7 +80,7 @@ print len(labels),len(labels[0])
 features = np.array(features)
 
 col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
-#print col_deleted
+print col_deleted
 features = np.delete(features, col_deleted, axis=1)
 
 print len(features),len(features[0])

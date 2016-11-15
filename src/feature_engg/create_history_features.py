@@ -318,12 +318,12 @@ def get_consolidated_feature_train(question_id, user_id):
         user_f = user_to_feature[user_id].get_feature_train(question_id)
     else :
         print "unknown user"
-        user_f = [0] * 6 
+        user_f = [0] * 22
     if question_id in ques_to_feature:
         question_f = ques_to_feature[question_id].get_feature_train(user_id)
     else :
         print "unknown question"
-        question_f = [0] * 6
+        question_f = [0] * 22
         
     return user_f + question_f
 

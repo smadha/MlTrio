@@ -138,7 +138,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
 
     report = classification_report(y_true, y_pred)
     print report
-    with open("results_nn.txt", "a") as f:
+    with open("results_nn_best.txt", "a") as f:
         f.write(report)
         f.write("\n")
         f.write(" ".join([str(s) for s in ["arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0]]))

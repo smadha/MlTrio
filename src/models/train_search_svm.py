@@ -63,7 +63,7 @@ X_tr, X_te,y_tr, y_te = train_test_split(features,labels, train_size = 0.85)
 svr = SVC()
 
 parameters = [{ 'kernel':['rbf'], 'C':C_range, 'gamma':gamma_ramge,'class_weight':class_weight_range
-               ,'cache_size':[1000], 'tol':[1e-2]}]
+               ,'cache_size':[1000], 'tol':[1e-2], 'max_iter':[100]}]
 
 clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=1000, iid=False, scoring=score)
 

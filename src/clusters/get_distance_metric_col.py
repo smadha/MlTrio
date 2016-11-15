@@ -31,7 +31,6 @@ print 'size of l2 distance metric', np.shape(user_l2_distance_metric)
 
 
 def get_distance_metric_for_user(U1,U2, metric):
-    print 'U1, U2', U1,'::', U2
     '''
         Returns a scalar value : distance measure between two users
     '''

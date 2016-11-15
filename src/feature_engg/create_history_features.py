@@ -7,7 +7,7 @@ from clusters.get_distance_metric_col import get_distance_metric_for_user
 from clusters.get_ques_similarity import get_distance_metric_for_ques
 import time
 
-MIN_NUM = 10
+MIN_NUM = 100
 user_user_sim_cache_L1 = {}
 user_user_sim_cache_L2 = {}
 ques_ques_sim_cache_L1 = {}
@@ -106,9 +106,9 @@ class UserHistory:
           
         # if len(self.question_ans) = 0 give a neg distance 
         if (len(self.question_ans) == 0): 
-            feature.append(0.05)
-            feature.append(0.05)
-            feature.append(0.05)
+            feature.append(0.0005)
+            feature.append(0.0005)
+            feature.append(0.0005)
             feature.append(0)
             
             feature.append(500)

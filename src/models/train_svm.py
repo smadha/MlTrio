@@ -42,12 +42,12 @@ print len(labels),len(labels[0])
 features, X_mu, X_sig = normalize(features)
 
 gamma_ramge = [ 4**i for i in range(-7,0) ]
-C_range = [ 4**i for i in range(-3,5) ]
+C_range = [ 4**i for i in range(-3,6) ]
 
 # Number of folds in Cross validation
 CV_FOLDS = 3
 # Number of parallel jobs
-parallel = 2
+parallel = 6
 
 X_tr, X_te,y_tr, y_te = train_test_split(features,labels, train_size = 0.85)
 
@@ -55,7 +55,7 @@ svr = SVC()
 
 parameters = [{ 'kernel':['rbf'], 'C':C_range, 'gamma':gamma_ramge}]
 
-clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=False)
+clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=10)
 
 clf.fit(X_tr,y_tr)
 

@@ -94,7 +94,7 @@ class UserHistory:
         question_ans_rand = random.sample(set(self.question_ans), min_num)
         for ques in question_ans_rand:
             L2_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="l2"))
-            ham_dist_i = ham_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="hamming"))
+            ham_dist_i = get_distance_metric_for_ques(ques, ques_asked, metric="hamming")
             if ham_dist_i:
                 ham_dist.append(ham_dist_i)
           
@@ -121,7 +121,7 @@ class UserHistory:
         question_not_ans_rand = random.sample(set(self.question_not_ans), min_num)
         for ques in question_not_ans_rand:
             L2_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="l2"))
-            ham_dist_i = ham_dist.append(get_distance_metric_for_ques(ques, ques_asked, metric="hamming"))
+            ham_dist_i = get_distance_metric_for_ques(ques, ques_asked, metric="hamming")
             if ham_dist_i:
                 ham_dist.append(ham_dist_i)
             

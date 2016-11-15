@@ -99,17 +99,17 @@ class UserHistory:
             if ham_dist_i:
                 ham_dist.append(ham_dist_i)
           
-        # if len(self.question_ans) = 0 give a higher distance 
+        # if len(self.question_ans) = 0 give a neg distance 
         if (len(self.question_ans) == 0): 
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
             
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
             
         else:
             feature.append(max(ham_dist))
@@ -134,7 +134,7 @@ class UserHistory:
             if ham_dist_i:
                 ham_dist.append(ham_dist_i)
            
-        # if len(self.question_not_ans) = 0 give a higher distance
+        # if len(self.question_not_ans) = 0 give a lower distance
         if(len(self.question_not_ans) == 0):
             feature.append(0)
             feature.append(0)
@@ -243,15 +243,15 @@ class QuesHistory:
                 ham_dist.append(ham_dist_i)
                 
         if(len(self.user_ans) == 0):
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
             
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
-            feature.append(1000)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
+            feature.append(-1)
             
         else:
             feature.append(max(ham_dist))

@@ -71,14 +71,29 @@ if __name__ == '__main__':
     count = 0
     features = []
     labels = []
+    len_feat = None
     with open(simp.INVITED_INFO_TRAIN) as f:
+        training_data = f.readline().strip().split("\t")
+        label = training_data[2]
+        question_id = training_data[0]
+        user_id = training_data[1]
+        
+        full_feat = get_full_feature(question_id, user_id)
+        len_feat = len(full_feat)
+        features.append(full_feat)
+        labels.append(label)
+        print len(features[0]),features[0]
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
             label = training_data[2]
             question_id = training_data[0]
             user_id = training_data[1]
             
-            features.append(get_full_feature(question_id, user_id))
+            full_feat = get_full_feature(question_id, user_id)
+            if len_feat != len(full_feat):
+                print "inconsistent length", len(full_feat)
+                print question_id, user_id, label
+            features.append(full_feat)
             labels.append(label)
 #             print len(features[0]),features[0]
             training_data = f.readline().strip().split("\t")

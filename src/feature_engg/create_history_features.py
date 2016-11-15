@@ -103,6 +103,14 @@ class UserHistory:
         if (len(self.question_ans) == 0): 
             feature.append(1000)
             feature.append(1000)
+            feature.append(1000)
+            feature.append(1000)
+            
+            feature.append(1000)
+            feature.append(1000)
+            feature.append(1000)
+            feature.append(1000)
+            
         else:
             feature.append(max(ham_dist))
             feature.append(min(ham_dist))
@@ -128,8 +136,16 @@ class UserHistory:
            
         # if len(self.question_not_ans) = 0 give a higher distance
         if(len(self.question_not_ans) == 0):
-            feature.append(1000)
-            feature.append(1000)
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            
         else: 
             feature.append(max(ham_dist))
             feature.append(min(ham_dist))
@@ -229,6 +245,14 @@ class QuesHistory:
         if(len(self.user_ans) == 0):
             feature.append(1000)
             feature.append(1000)
+            feature.append(1000)
+            feature.append(1000)
+            
+            feature.append(1000)
+            feature.append(1000)
+            feature.append(1000)
+            feature.append(1000)
+            
         else:
             feature.append(max(ham_dist))
             feature.append(min(ham_dist))
@@ -254,8 +278,17 @@ class QuesHistory:
                 ham_dist.append(ham_dist_i)
  
         if(len(self.user_not_ans) == 0):
-            feature.append(1000)
-            feature.append(1000)
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            feature.append(0)
+            
+            
         else:
             feature.append(max(ham_dist))
             feature.append(min(ham_dist))
@@ -329,8 +362,8 @@ def get_consolidated_feature_train(question_id, user_id):
 
 if __name__ == '__main__':
     print "Start",time.time()
-    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "18ef078c925908094fa5302805a71cac")
-    print get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e")
+    print "Feature length",len(get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "18ef078c925908094fa5302805a71cac"))
+    print "Feature length",len(get_consolidated_feature_train("d3b63d3e7efcc4c942751c4eddce3638", "7b4f71989c4cefb93a1c639940aa032e"))
     qh = QuesHistory()
     qh.add_user_ans("7b4f71989c4cefb93a1c639940aa032e")
 

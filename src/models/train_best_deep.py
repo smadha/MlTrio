@@ -92,7 +92,7 @@ print len(labels),len(labels[0])
 features = np.array(features)
 
 col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
-col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
+# col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
 print col_deleted
 features = np.delete(features, col_deleted, axis=1)
 
@@ -114,7 +114,7 @@ batch_size=5000
 nb_epoch=100
 verbose=True
 
-model_num=0 
+model_num=10 
 
 def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=False):
     '''
@@ -177,9 +177,9 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
         model_num+=1
     
 
-run_NN([len(features[0]),1024, 512, 2], 1e-05, 1e-05, 1, 2.5, True)
-run_NN([len(features[0]),1024, 512, 2], 1e-05, 1e-05, 1, 2.5, True)
-run_NN([len(features[0]),1024, 1024, 2], 1e-05, 1e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, True)
 
 
 

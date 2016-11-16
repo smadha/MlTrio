@@ -641,3 +641,10 @@ arch, reg_coeff, sgd_decay, class_weight_0, subsample_size [326, 1024, 512, 256,
 avg / total       0.79      0.58      0.66     34416
 
 arch, reg_coeff, sgd_decay, class_weight_0, subsample_size [326, 1024, 512, 256, 2] 100.0 0.01 1 2.5
+
+
+Models selected
+def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=False):
+
+run_NN([len(features[0]),1024, 512, 2], 1e-05, 1e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 1e-05, 1, 2.5, True)

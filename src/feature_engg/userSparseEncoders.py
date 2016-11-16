@@ -6,8 +6,11 @@ import numpy as np
 import cPickle as pickle
 
 users_new = []
-encoding_dim = 1000
 
+updated_user_data = []
+user_data_train = []
+user_data_test = []
+myfile = ''
 
 def build_user_data():
     users_id_dict = {}
@@ -26,8 +29,8 @@ def build_user_data():
     print 'np.shape(users_new)::', np.shape(users_new)
     pickle.dump(users_new, open("user_complete_features.p", "wb"))   
     pickle.dump(users_id_dict, open("users_ids_dict.p", "wb"))
-    print users_new[0]
-build_user_data() 
+#     print users_new[0]
+#build_user_data() 
 
 
 def normalize(X_tr):
@@ -46,19 +49,17 @@ def normalize(X_tr):
 user_data = pickle.load( open("user_complete_features.p", "rb") )
 print np.shape(user_data)
 
-[user_data, data_mu, data_sig] = normalize(user_data)
 
-user_data_train = user_data[0:22000]
-user_data_test = user_data[22000:25763]
 
-def train_encoder_decoder():
+def train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch):
     
+    modify_data(isNorm) 
     num_of_features = np.shape(user_data_train)[1]
     
     print 'number of features', num_of_features
     input_features = Input(shape=(num_of_features,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(encoding_dim, activation='relu')(input_features)
+    encoded = Dense(enc_dim, activation='relu',W_regularizer=regularizers.l2(reg_p))(input_features)
     # "decoded" is the lossy reconstruction of the input
     decoded = Dense(num_of_features, activation='linear')(encoded)
     
@@ -66,28 +67,77 @@ def train_encoder_decoder():
     autoencoder = Model(input=input_features, output=decoded)
     encoder = Model(input=input_features, output=encoded)
     # create a placeholder for an encoded (32-dimensional) input
-    encoded_input = Input(shape=(encoding_dim,))
+    encoded_input = Input(shape=(enc_dim,))
     # retrieve the last layer of the autoencoder model
     decoder_layer = autoencoder.layers[-1]
     # create the decoder model
     decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
-    autoencoder.compile(optimizer='adadelta', loss='mse')
+    autoencoder.compile(optimizer='adadelta', loss=loss_func)
     
-    autoencoder.fit(user_data_train, user_data_train,
+    hist = autoencoder.fit(user_data_train, user_data_train,
                     nb_epoch=100,
-                    batch_size=1000,
+                    batch_size=batch,
                     shuffle=True,
                     validation_data=(user_data_test, user_data_test))
     
-    autoencoder.save("user_encoder_model_deep.h5")
+    with open("user_loss_history.txt", "a+") as loss_history:
+        d = str(hist.history)
+        print 'd', d
+        loss_history.write(d)
+    
+    model_file_name = "user_encoder_model_deep_"+str(file_suffix)+".h5"
+    autoencoder.save(model_file_name)
     
     #print "user_data_test first training example:", user_data_test[0]
-    compressed_features = encoder.predict(user_data)
-    
-    pickle.dump(compressed_features, open("encodedFeatures/compressed_user_features.p", "wb"))
+    compressed_features = encoder.predict(updated_user_data)
+    compressed_featurs_name = "encodedFeatures/compressed_user_features_"+str(file_suffix)+".p"
+    pickle.dump(compressed_features, open(compressed_featurs_name, "wb+"))
     
     #print compressed_features[0]
     #decoded_imgs = decoder.predict(compressed_features)
     #print '\n', decoded_imgs[0, 0:30]
+
+def modify_data(isNorm):
     
-train_encoder_decoder()
+    global updated_user_data
+    global user_data_train, user_data_test
+    if isNorm:
+        [updated_user_data, data_mu, data_sig] = normalize(user_data)
+#         with open("parameters.txt", "a") as myfile:
+#             d = str(isNorm), ",sigma: ", str(data_sig), ", mean::", data_mu
+#             myfile.write( str(d))
+    else:
+        updated_user_data = user_data
+
+    
+
+    user_data_train = updated_user_data[0:200]
+    user_data_test = updated_user_data[200:257]
+    
+    
+
+def gridSearch():
+    normalise_value = [True, False]
+    loss_func_arr = ['mse','kld']
+    reg_param = [0.0001, 0.001, 0.3, 0.1, 1,2]
+    encoding_dim = [100,300,500,1000]
+    batch_size = [1000]
+    file_suffix = 0
+    global myfile
+    
+    with open("user_parameters.txt", "a+") as myfile:
+        
+        for isNorm in normalise_value:
+            
+            for loss_func in loss_func_arr:
+                for reg_p in reg_param:
+                    for enc_dim in encoding_dim:
+                        for batch in batch_size:
+                            data ="\n\n\n" + (str(isNorm), ",Loss: ", str(loss_func), ",Reg_param ", str(reg_p), ",Encoding_dim ", str(enc_dim), ",batch size: ", str(batch), ", file_suffix::", file_suffix)
+                            print data
+                            myfile.write(str(data))
+                            train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch)
+                            file_suffix += 1
+                            
+gridSearch()
+

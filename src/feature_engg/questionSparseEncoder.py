@@ -62,7 +62,7 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     print 'number of features', num_of_features
     input_features = Input(shape=(num_of_features,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(enc_dim, activation='relu',activity_regularizer=regularizers.activity_l1(reg_p))(input_features)
+    encoded = Dense(enc_dim, activation='relu',W_regularizer=regularizers.l2(reg_p))(input_features)
     # "decoded" is the lossy reconstruction of the input
     decoded = Dense(num_of_features, activation='linear')(encoded)
      
@@ -85,14 +85,14 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
                     validation_data=(ques_data_test, ques_data_test))
     
     print "history", hist.history
-    with open("parameters.txt", "a") as myfile:
-            d = str(hist.history)
-            myfile.write(d)
+    
+    with open("ques_loss_history.txt", "a+") as loss_history:
+        d = str(hist.history)
+        loss_history.write(d)
     
     model_file_name = "ques_encoder_model_deep_"+str(file_suffix)+".h5"
     autoencoder.save(model_file_name) 
     
-    print "ques_data_test first training example:", ques_data_test[0]
     compressed_features = encoder.predict(updated_ques_data)
     compressed_featurs_name = "encodedFeatures/compressed_ques_features_"+str(file_suffix)+".p"
     pickle.dump(compressed_features, open(compressed_featurs_name, "wb+"))
@@ -105,14 +105,14 @@ def modify_data(isNorm):
     global ques_data_train, ques_data_test
     if isNorm:
         [updated_ques_data, data_mu, data_sig] = normalize(ques_data)
-        with open("parameters.txt", "a") as myfile:
-            d = str(isNorm), ",sigma: ", str(data_sig), ", mean::", data_mu
-            myfile.write( str(d))
+#         with open("parameters.txt", "a") as myfile:
+#             d = str(isNorm), ",sigma: ", str(data_sig), ", mean::", data_mu
+#             myfile.write( str(d))
     else:
         updated_ques_data = ques_data
 
-    ques_data_train = updated_ques_data[0:7000]
-    ques_data_test = updated_ques_data[7000:8095]
+    ques_data_train = updated_ques_data[0:800]
+    ques_data_test = updated_ques_data[800:809]
     
     
 def gridSearch():
@@ -123,8 +123,7 @@ def gridSearch():
     batch_size = [1000]
     file_suffix = 0
     
-    open("parameters.txt", 'w').close()
-    with open("parameters.txt", "a") as myfile:
+    with open("ques_parameters.txt", "a+") as myfile:
         
         for isNorm in normalise_value:
             
@@ -137,6 +136,6 @@ def gridSearch():
                             myfile.write(str(data))
                             train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch)
                             file_suffix += 1
-                            break
+                break
                             
 gridSearch()

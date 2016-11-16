@@ -82,6 +82,7 @@ print len(labels),len(labels[0])
 features = np.array(features)
 
 col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
+# col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
 print col_deleted
 features = np.delete(features, col_deleted, axis=1)
 
@@ -106,8 +107,17 @@ verbose=True
 
 
 def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
-    features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
-    
+    '''
+    Runs NN with give params obtained from grid search. 
+    If save is enabled - Runs and saves model on full training set
+    If save is disable - Takes out a test data and runs on reamaing training set. Prints a classification report.
+     
+    '''
+    if not save:
+        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
+    else:
+        features_tr, labels_tr = features,labels
+        
     call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='auto')
     
     # Generate Model
@@ -129,20 +139,21 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
         model.fit(features_tr, labels_tr, nb_epoch=nb_epoch, batch_size=batch_size, 
             verbose=verbose, class_weight={0: class_weight_0 , 1:1})
     
-    labels_pred = model.predict_classes(features_te)
-    print labels_te[0], labels_pred[0]
-    y_true, y_pred = [ 0*l[0] + 1*l[1] for l in labels_te], labels_pred
-    
-    print y_true[0], y_pred[0]
-    print "arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0
-
-    report = classification_report(y_true, y_pred)
-    print report
-    with open("results_nn_best.txt", "a") as f:
-        f.write(report)
-        f.write("\n")
-        f.write(" ".join([str(s) for s in ["arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0]]))
-        f.write("\n")
+    if not save:
+        labels_pred = model.predict_classes(features_te)
+        print labels_te[0], labels_pred[0]
+        y_true, y_pred = [ 0*l[0] + 1*l[1] for l in labels_te], labels_pred
+        
+        print y_true[0], y_pred[0]
+        print "arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0
+        
+        report = classification_report(y_true, y_pred)
+        print report
+        with open("results_nn_best.txt", "a") as f:
+            f.write(report)
+            f.write("\n")
+            f.write(" ".join([str(s) for s in ["arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0]]))
+            f.write("\n")
         
     if save:
         # Save model
@@ -152,5 +163,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
 
  
 
-run_NN([len(features[0]),1024,1024,512,2], 10, 1e-2, 0.4,save=True)
+run_NN([len(features[0]),2560,2], 0.1, 1e-2, 0.25,save=True)
+
+#arch, reg_coeff, sgd_decay, class_weight_0 [326, 2560, 2] 0.1 0.01 0.25
 

@@ -64,12 +64,12 @@ X_tr, X_te,y_tr, y_te = train_test_split(features,labels, train_size = 0.85)
 svr = SVC()
 
 parameters = [{ 'kernel':['rbf'], 'C':C_range, 'gamma':gamma_ramge,'class_weight':class_weight_range
-               ,'cache_size':[1000], 'tol':[1e-2], 'max_iter':[100]}]
+               ,'cache_size':[1000], 'tol':[1e-2], 'max_iter':[1000]}]
 
 clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=1000, iid=False, scoring=score)
 print "data splitted for testing ", len(y_tr), len(y_te) 
     
-X_tr, y_tr = balanced_subsample(X_tr, y_tr, subsample_size=2.0)
+X_tr, y_tr = balanced_subsample(X_tr, y_tr, subsample_size=2.5)
 print "Training data balanced-", X_tr.shape, len(y_tr)
 
 clf.fit(X_tr,y_tr)

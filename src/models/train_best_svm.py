@@ -38,6 +38,7 @@ features = np.delete(features, col_deleted, axis=1)
 print len(features),len(features[0])
 print len(labels),labels[0]
 
+features, X_mu, X_sig = normalize(features)
 
 X_tr, X_te,y_tr, y_te = train_test_split(features,labels, train_size = 0.85)
 

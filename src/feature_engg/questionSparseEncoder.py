@@ -6,15 +6,14 @@ from keras.callbacks import EarlyStopping
 
 import numpy as np
 import cPickle as pickle
+from __builtin__ import False
 
 ques_new = []
-
+updated_ques_data = []
+ques_data_train = []
+ques_data_test = []
 
 ## Hyper parameters for encoding question features:
-encoding_dim = [10000]
-regularisation_val = [10e-5]
-loss_func = ["kld"]
-batch_size = [10000]
 
 
 def build_ques_data():
@@ -53,21 +52,17 @@ def normalize(X_tr):
 
 ques_data = pickle.load( open("ques_complete_features.p", "rb") )
 print np.shape(ques_data)
-[ques_data, data_mu, data_sig] = normalize(ques_data)
 
-print 'ques_data[0]', ques_data[0]
-
-ques_data_train = ques_data[0:7000]
-ques_data_test = ques_data[7000:8095]
  
-def train_ques_encoder_decoder():
-     
+def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch):
+    
+    modify_data(isNorm) 
     num_of_features = np.shape(ques_data_train)[1]
     #call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
     print 'number of features', num_of_features
     input_features = Input(shape=(num_of_features,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(encoding_dim[0], activation='relu',activity_regularizer=regularizers.activity_l1(regularisation_val[0]))(input_features)
+    encoded = Dense(enc_dim, activation='relu',activity_regularizer=regularizers.activity_l1(reg_p))(input_features)
     # "decoded" is the lossy reconstruction of the input
     decoded = Dense(num_of_features, activation='linear')(encoded)
      
@@ -75,26 +70,78 @@ def train_ques_encoder_decoder():
     autoencoder = Model(input=input_features, output=decoded)
     encoder = Model(input=input_features, output=encoded)
     # create a placeholder for an encoded (32-dimensional) input
-    encoded_input = Input(shape=(encoding_dim[0],))
+    encoded_input = Input(shape=(enc_dim,))
     # retrieve the last layer of the autoencoder model
     decoder_layer = autoencoder.layers[-1]
     # create the decoder model
     decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
     #ksgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    autoencoder.compile(optimizer='adadelta', loss=loss_func[0])
+    autoencoder.compile(optimizer='adadelta', loss=loss_func)
      
-    autoencoder.fit(ques_data_train, ques_data_train,
+    hist = autoencoder.fit(ques_data_train, ques_data_train,
                     nb_epoch=100,
-                    batch_size=batch_size[0],
+                    batch_size=batch,
                     shuffle=True,
                     validation_data=(ques_data_test, ques_data_test))
     
-    model_file_name = "ques_encoder_model_deep_"+loss_func[0]+".h5"
+    print "history", hist.history
+    with open("parameters.txt", "a") as myfile:
+            d = str(hist.history)
+            myfile.write(d)
+    
+    model_file_name = "ques_encoder_model_deep_"+str(file_suffix)+".h5"
     autoencoder.save(model_file_name) 
     
     print "ques_data_test first training example:", ques_data_test[0]
-    compresses_features = encoder.predict(ques_data)
-    pickle.dump(compresses_features, open("encodedFeatures/compressed_ques_features_mse.p", "wb"))
-    print compresses_features[0]
+    compressed_features = encoder.predict(ques_data)
+    compressed_featurs_name = "encodedFeatures/compressed_ques_features_"+str(file_suffix)+".p"
+    pickle.dump(compressed_features, open(compressed_featurs_name, "wb"))
      
-train_ques_encoder_decoder()
+#train_ques_encoder_decoder()
+
+def modify_data(isNorm):
+    
+    global updated_ques_data
+    global ques_data_train, ques_data_test
+    if isNorm:
+        [updated_ques_data, data_mu, data_sig] = normalize(ques_data)
+        with open("parameters.txt", "a") as myfile:
+            d = str(isNorm), ",sigma: ", str(data_sig), ", mean::", data_mu
+            myfile.write( str(d))
+    else:
+        updated_ques_data = ques_data
+        
+        
+        
+    
+    ques_data_train = updated_ques_data[0:300]
+    ques_data_test = updated_ques_data[300:350]
+    
+    return ques_data, data_mu, data_sig
+    
+    
+def gridSearch():
+    normalise_value = [True, False]
+    loss_func_arr = ['mse','kld']
+    reg_param = [0.0001, 0.001, 0.3, 0.1, 1,2]
+    encoding_dim = [100,300,500,1000]
+    batch_size = [1000]
+    file_suffix = 0
+    
+    open("parameters.txt", 'w').close()
+    with open("parameters.txt", "a") as myfile:
+        
+        for isNorm in normalise_value:
+            
+            for loss_func in loss_func_arr:
+                for reg_p in reg_param:
+                    for enc_dim in encoding_dim:
+                        for batch in batch_size:
+                            data = str(isNorm), ",Loss: ", str(loss_func), ",Reg_param ", str(reg_p), ",Encoding_dim ", str(enc_dim), ",batch size: ", str(batch), ", file_suffix::", file_suffix
+                            print data
+                            myfile.write(str(data))
+                            train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch)
+                            file_suffix += 1
+                            break
+                            
+gridSearch()

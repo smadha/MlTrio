@@ -93,9 +93,9 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     autoencoder.save(model_file_name) 
     
     print "ques_data_test first training example:", ques_data_test[0]
-    compressed_features = encoder.predict(ques_data)
+    compressed_features = encoder.predict(updated_ques_data)
     compressed_featurs_name = "encodedFeatures/compressed_ques_features_"+str(file_suffix)+".p"
-    pickle.dump(compressed_features, open(compressed_featurs_name, "wb"))
+    pickle.dump(compressed_features, open(compressed_featurs_name, "wb+"))
      
 #train_ques_encoder_decoder()
 
@@ -110,14 +110,9 @@ def modify_data(isNorm):
             myfile.write( str(d))
     else:
         updated_ques_data = ques_data
-        
-        
-        
-    
-    ques_data_train = updated_ques_data[0:300]
-    ques_data_test = updated_ques_data[300:350]
-    
-    return ques_data, data_mu, data_sig
+
+    ques_data_train = updated_ques_data[0:7000]
+    ques_data_test = updated_ques_data[7000:8095]
     
     
 def gridSearch():
@@ -137,7 +132,7 @@ def gridSearch():
                 for reg_p in reg_param:
                     for enc_dim in encoding_dim:
                         for batch in batch_size:
-                            data = str(isNorm), ",Loss: ", str(loss_func), ",Reg_param ", str(reg_p), ",Encoding_dim ", str(enc_dim), ",batch size: ", str(batch), ", file_suffix::", file_suffix
+                            data ="\n\n\n", str(isNorm), ",Loss: ", str(loss_func), ",Reg_param ", str(reg_p), ",Encoding_dim ", str(enc_dim), ",batch size: ", str(batch), ", file_suffix::", file_suffix,
                             print data
                             myfile.write(str(data))
                             train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch)

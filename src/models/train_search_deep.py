@@ -154,7 +154,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
     with open("results_nn.txt", "a") as f:
         f.write(report)
         f.write("\n")
-        f.write(" ".join([str(s) for s in ["arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0]]))
+        f.write(" ".join([str(s) for s in ["arch, reg_coeff, sgd_decay, class_weight_0, subsample_size", arch, reg_coeff, sgd_decay, class_weight_0, subsample_size]]))
         f.write("\n")
         
     if save:

@@ -110,8 +110,8 @@ momentum = 0.99
 eStop = True
 sgd_Nesterov = True
 sgd_lr = 1e-5
-batch_size=10000
-nb_epoch=50
+batch_size=5000
+nb_epoch=100
 verbose=True
 
 model_num=0 

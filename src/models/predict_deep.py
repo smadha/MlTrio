@@ -19,10 +19,10 @@ def normalize_test(X_te, X_mu, X_sig):
 with open("model/train_config", 'rb') as pickle_file:
     save_res = pickle.load(pickle_file)
 
-loaded_model = load_model("model/model_deep.h5")
+loaded_model = load_model("model/model_deep_0.h5")
 print("Loaded model from disk")
  
-test_features = pickle.load(open("./feature/validation_features.p", "r") )
+test_features = pickle.load(open("../feature_engg/feature/validation_features.p", "r") )
         
 print len(test_features)
 

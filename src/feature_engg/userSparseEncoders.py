@@ -6,7 +6,7 @@ import numpy as np
 import cPickle as pickle
 
 users_new = []
-encoding_dim = 10
+encoding_dim = 1000
 
 
 def build_user_data():
@@ -48,8 +48,8 @@ print np.shape(user_data)
 
 [user_data, data_mu, data_sig] = normalize(user_data)
 
-user_data_train = user_data[0:1000]
-user_data_test = user_data[1000:1500]
+user_data_train = user_data[0:22000]
+user_data_test = user_data[22000:25763]
 
 def train_encoder_decoder():
     
@@ -81,13 +81,13 @@ def train_encoder_decoder():
     
     autoencoder.save("user_encoder_model_deep.h5")
     
-    print "user_data_test first training example:", user_data_test[0]
-    compressed_features = encoder.predict(user_data_test)
+    #print "user_data_test first training example:", user_data_test[0]
+    compressed_features = encoder.predict(user_data)
     
     pickle.dump(compressed_features, open("encodedFeatures/compressed_user_features.p", "wb"))
     
-    print compressed_features[0]
-    decoded_imgs = decoder.predict(compressed_features)
-    print '\n', decoded_imgs[0, 0:30]
+    #print compressed_features[0]
+    #decoded_imgs = decoder.predict(compressed_features)
+    #print '\n', decoded_imgs[0, 0:30]
     
 train_encoder_decoder()

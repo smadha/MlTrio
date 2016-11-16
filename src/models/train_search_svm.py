@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report
 import numpy as np
 import cPickle as pickle
 from sklearn.metrics import f1_score, make_scorer
+from models.down_sampling import balanced_subsample
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -49,7 +50,7 @@ features, X_mu, X_sig = normalize(features)
 
 gamma_ramge = [ 4**i for i in range(-3,0) ]
 C_range = [ 4**i for i in range(-1,6) ]
-class_weight_range = [ {0: class_weight_0 , 1:1} for class_weight_0 in [0.25,0.5,0.75, 0.9]]
+class_weight_range = [ {0: class_weight_0 , 1:1} for class_weight_0 in [0.95]]
 
 score = make_scorer(score_f1_class1, greater_is_better=True)
 
@@ -66,6 +67,10 @@ parameters = [{ 'kernel':['rbf'], 'C':C_range, 'gamma':gamma_ramge,'class_weight
                ,'cache_size':[1000], 'tol':[1e-2], 'max_iter':[100]}]
 
 clf = GridSearchCV(svr, parameters, cv=CV_FOLDS, n_jobs = parallel, verbose=1000, iid=False, scoring=score)
+print "data splitted for testing ", len(y_tr), len(y_te) 
+    
+X_tr, y_tr = balanced_subsample(X_tr, y_tr, subsample_size=2.0)
+print "Training data balanced-", X_tr.shape, len(y_tr)
 
 clf.fit(X_tr,y_tr)
 

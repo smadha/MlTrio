@@ -1,7 +1,6 @@
 from simple_expansion import simple_expansion_feature as simp
 from collections import Counter
 import numpy as np
-import mltrio_utils
 import random
 from clusters.get_distance_metric_col import get_distance_metric_for_user
 from clusters.get_ques_similarity import get_distance_metric_for_ques
@@ -60,11 +59,16 @@ class UserHistory:
 
     def get_feature_train(self, ques_asked):
         #EXCLUDE TRAINING QUESTION BEFORE CALCULATING FEATURE
+        removed_ans = False
+        removed_not_ans = False
+        
         if(ques_asked in self.question_ans):
             self.question_ans.remove(ques_asked)
-        else:
-        #if(ques_asked in self.question_not_ans):
+            removed_ans = True
+#         else: for unknown data
+        if(ques_asked in self.question_not_ans):
             self.question_not_ans.remove(ques_asked)
+            removed_not_ans = True
         
         # 0,1
         feature = [len(self.question_ans),len(self.question_not_ans) ]
@@ -162,6 +166,12 @@ class UserHistory:
             feature.append(np.mean(L2_dist))
             feature.append(np.std(L2_dist))
         
+        if removed_ans:
+            self.question_ans.append(ques_asked)
+        if removed_not_ans:
+            self.question_not_ans.append(ques_asked)
+            
+            
         return feature
 
 class QuesHistory:
@@ -202,11 +212,16 @@ class QuesHistory:
         :param user_target: user_id ID
         :return: all features based on this question_id and user_id ID
         '''
+        removed_ans = False
+        removed_not_ans = False
+        
         if(user_target in self.user_ans):
             self.user_ans.remove(user_target)
-        else:
-        #if(user_target in self.user_not_ans):
+            removed_ans = True
+#         else:
+        if(user_target in self.user_not_ans):
             self.user_not_ans.remove(user_target)
+            removed_not_ans = True
             
         feature = [len(self.user_ans),len(self.user_not_ans)]
         
@@ -311,6 +326,11 @@ class QuesHistory:
             feature.append(np.mean(L2_dist))
             feature.append(np.std(L2_dist))
          
+        if removed_ans:
+            self.user_ans.append(user_target)
+        if removed_not_ans:
+            self.user_not_ans.append(user_target)
+            
         return feature
 
 

@@ -80,11 +80,11 @@ def get_transform_label():
     return transform_label(pickle.load( open("../feature_engg/feature/labels.p", "rb") ) )
     
 
-features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
-labels = get_transform_label()
+# features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
+# labels = get_transform_label()
 
-# features = np.random.normal(size=(2294,354))
-# labels = [[1.0,0.0]]*2000 + [[0.0,1.0]]*(2294-2000)
+features = np.random.normal(size=(2294,354))
+labels = [[1.0,0.0]]*2000 + [[0.0,1.0]]*(2294-2000)
 
 print len(features),len(features[0])
 print len(labels),len(labels[0])
@@ -92,7 +92,7 @@ print len(labels),len(labels[0])
 features = np.array(features)
 
 col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
-# col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
+col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
 print col_deleted
 features = np.delete(features, col_deleted, axis=1)
 
@@ -114,23 +114,26 @@ batch_size=10000
 nb_epoch=50
 verbose=True
 
+model_num=0 
 
-def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
+def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=False):
     '''
     Runs NN with give params obtained from grid search. 
     If save is enabled - Runs and saves model on full training set
     If save is disable - Takes out a test data and runs on reamaing training set. Prints a classification report.
      
     '''
+    global model_num
     if not save:
         features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
-        features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size=2.0)
+        features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size=subsample_size)
         labels_tr = transform_label(labels_tr)
         print "Training data balanced-", features_tr.shape, len(labels_tr)
     else:
-        features_tr, labels_tr = features,labels
+        features_tr, labels_tr =  balanced_subsample(features, original_label(labels), subsample_size=subsample_size) 
+        labels_tr = transform_label(labels_tr)
         
-    call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='auto')
+    call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
     
     # Generate Model
     model = genmodel(num_units=arch, reg_coeff=reg_coeff )
@@ -168,13 +171,15 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
         
     if save:
         # Save model
-        model.save("model/model_deep.h5")
-        print("Saved model to disk")
+        print arch, reg_coeff, sgd_decay, class_weight_0,subsample_size, save
+        model.save("model/model_deep_{0}.h5".format(model_num))
+        print "Saved model to disk", "model/model_deep_{0}.h5".format(model_num)
+        model_num+=1
     
 
- 
+run_NN([len(features[0]),1024, 512, 2], 1e-05, 1e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 512, 2], 1e-05, 1e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 1e-05, 1, 2.5, True)
 
-run_NN([len(features[0]),512,512,2], 0.01, 1e-2, 1)
 
-#arch, reg_coeff, sgd_decay, class_weight_0 [326, 2560, 2] 0.1 0.01 0.25
 

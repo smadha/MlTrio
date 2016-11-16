@@ -80,11 +80,11 @@ def get_transform_label():
     return transform_label(pickle.load( open("../feature_engg/feature/labels.p", "rb") ) )
     
 
-# features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
-# labels = get_transform_label()
+features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
+labels = get_transform_label()
 
-features = np.random.normal(size=(2294,354))
-labels = [[1.0,0.0]]*2000 + [[0.0,1.0]]*(2294-2000)
+# features = np.random.normal(size=(2294,354))
+# labels = [[1.0,0.0]]*2000 + [[0.0,1.0]]*(2294-2000)
 
 print len(features),len(features[0])
 print len(labels),len(labels[0])

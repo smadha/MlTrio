@@ -101,3 +101,5 @@ bytecup2016data/
 *.prefs
 
 recommender/.classpath
+
+*.h5

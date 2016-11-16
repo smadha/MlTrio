@@ -91,7 +91,7 @@ print len(labels),len(labels[0])
 features = np.array(features)
 
 col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
-col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
+# col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
 print col_deleted
 features = np.delete(features, col_deleted, axis=1)
 
@@ -168,7 +168,7 @@ arch_range = [[len(features[0]),1024,2], [len(features[0]),1024,512,2], [len(fea
 reg_coeffs_range = [1e-5, 1, 5, 1e1, 1e2]
 sgd_decays_range = [1e-5, 1e-2]
 class_weight_0_range = [1]
-subsample_size_range = [1.5,2.5]
+subsample_size_range = [2,2.5,3]
 
 #GRID SEARCH ON BEST PARAM
 for arch in arch_range:

@@ -1,8 +1,8 @@
 '''
 Uses flattened features in feature directory and run a SVM on it
 '''
- 
-from keras.models import load_model
+
+from sklearn.svm import SVC 
 import numpy as np
 import cPickle as pickle
 
@@ -19,10 +19,10 @@ def normalize_test(X_te, X_mu, X_sig):
 with open("model/train_config", 'rb') as pickle_file:
     save_res = pickle.load(pickle_file)
 
-loaded_model = load_model("model/model_deep.h5")
+loaded_model = pickle.load(open("./model/model_svm_dsample.p","r"))
 print("Loaded model from disk")
- 
-test_features = pickle.load(open("./feature/validation_features.p", "r") )
+
+test_features = pickle.load(open("../feature_engg/feature/validation_features.p", "r") )
         
 print len(test_features)
 
@@ -36,7 +36,7 @@ print len(test_features)
 
 # predict_proba outputs probability of each class
 # [x, y] mean probability of class 0 is x and probability of class 1 is y
-test_labels = loaded_model.predict_proba(test_features, verbose=1)
+test_labels = loaded_model.predict_proba(test_features)
 
 res = open("validate_label.csv", "w")
 

@@ -44,6 +44,11 @@ print len(labels),labels[0]
 features, X_mu, X_sig = normalize(features)
 print "data normalised"
 
+save_res = {"col_deleted":col_deleted,"X_mu":X_mu,"X_sig":X_sig}
+with open("model/train_config", 'wb') as pickle_file:
+    pickle.dump(save_res, pickle_file, protocol=2)
+print "Dumped config"
+
 
 save = True
 
@@ -87,9 +92,10 @@ if not save:
 else:
     X_tr, y_tr = balanced_subsample(features, labels, subsample_size=2.0)
 
-    clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 1 , 1:1}, cache_size=1000, tol=1e-1, max_iter=2000, verbose=True, probability=True)
+    clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 1 , 1:1}, cache_size=1000, tol=1e-1, max_iter=200, verbose=True, probability=True)
     
     clf.fit(X_tr,y_tr)
     
-    pickle.dump(clf, open("./model/model_svm_dsample.p","w"), protocol=2)
+#     pickle.dump(clf, open("./model/model_svm_dsample.p","w"), protocol=2)
     
+# StandardScaler or MinMaxScaler.

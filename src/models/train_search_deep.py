@@ -13,8 +13,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 import theano
+from models.down_sampling import balanced_subsample
 theano.config.openmp = True
-OMP_NUM_THREADS=24 
+OMP_NUM_THREADS=16 
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -58,13 +59,7 @@ def genmodel(num_units, actfn='relu', reg_coeff=0.0, last_act='softmax'):
                 W_regularizer=Reg.l2(l=reg_coeff), init='glorot_normal'))
     return model
 
-def transform_label():
-    '''
-    Returns list of labels as list of [0/1 , 1/0] 
-    if label = 1 [0, 1]
-    if label = 0 [1, 0]
-    '''
-    labels = pickle.load( open("../feature_engg/feature/labels.p", "rb") )
+def transform_label(labels):
     labels_new = []
     for label in labels:
         label_new = [0.0,0.0]
@@ -73,8 +68,22 @@ def transform_label():
     
     return labels_new
 
+def original_label(label):
+    return [ 0*l[0] + 1*l[1] for l in label]
+
+def get_transform_label():
+    '''
+    Returns list of labels as list of [0/1 , 1/0] 
+    if label = 1 [0, 1]
+    if label = 0 [1, 0]
+    '''
+    return transform_label(pickle.load( open("../feature_engg/feature/labels.p", "rb") ) )
+ 
 features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
-labels = transform_label()
+labels = get_transform_label()
+
+# features = np.random.normal(size=(2294,354))
+# labels = [[1.0,0.0]]*2000 + [[0.0,1.0]]*(2294-2000)
 
 print len(features),len(features[0])
 print len(labels),len(labels[0])
@@ -82,6 +91,7 @@ print len(labels),len(labels[0])
 features = np.array(features)
 
 col_deleted = np.nonzero((features==0).sum(axis=0) > (len(features)-1000))
+col_deleted = col_deleted[0].tolist() + range(6,22) + range(28,44)
 print col_deleted
 features = np.delete(features, col_deleted, axis=1)
 
@@ -100,14 +110,17 @@ momentum = 0.99
 eStop = True
 sgd_Nesterov = True
 sgd_lr = 1e-5
-batch_size=50000
+batch_size=5000
 nb_epoch=100
 verbose=True
 
 
-def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
+def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=False):
     features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
-    
+    features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size = subsample_size)
+    labels_tr = transform_label(labels_tr)
+    print "Training data balanced-", features_tr.shape, len(labels_tr)
+        
     call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='auto')
     
     # Generate Model
@@ -151,17 +164,19 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
     
 
  
-arch_range = [[len(features[0]),1024,2], [len(features[0]),1024,512,2], [len(features[0]),1024,1024,512,2],[len(features[0]),1024,512,256,2]]
+arch_range = [[len(features[0]),1024,2], [len(features[0]),1024,512,2], [len(features[0]),1024,1024,2],[len(features[0]),1024,512,256,2]]
 reg_coeffs_range = [1e-5, 1, 5, 1e1, 1e2]
 sgd_decays_range = [1e-5, 1e-2]
-class_weight_0_range = [0.25, 0.5,0.75]
+class_weight_0_range = [1]
+subsample_size_range = [1.5,2.5]
 
 #GRID SEARCH ON BEST PARAM
 for arch in arch_range:
     for reg_coeff in reg_coeffs_range:
         for sgd_decay in sgd_decays_range:
             for class_weight_0 in class_weight_0_range:
-                run_NN(arch, reg_coeff, sgd_decay, class_weight_0)
+                for subsample_size in subsample_size_range:
+                    run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size)
 
 # arch = [len(features[0]),1024,512,2]
 # reg_coeff = 1e-05

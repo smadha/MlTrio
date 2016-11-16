@@ -59,13 +59,7 @@ def genmodel(num_units, actfn='relu', reg_coeff=0.0, last_act='softmax'):
                 W_regularizer=Reg.l2(l=reg_coeff), init='glorot_normal'))
     return model
 
-def transform_label():
-    '''
-    Returns list of labels as list of [0/1 , 1/0] 
-    if label = 1 [0, 1]
-    if label = 0 [1, 0]
-    '''
-    labels = pickle.load( open("../feature_engg/feature/labels.p", "rb") )
+def transform_label(labels):
     labels_new = []
     for label in labels:
         label_new = [0.0,0.0]
@@ -74,8 +68,23 @@ def transform_label():
     
     return labels_new
 
+def original_label(label):
+    return [ 0*l[0] + 1*l[1] for l in label]
+
+def get_transform_label():
+    '''
+    Returns list of labels as list of [0/1 , 1/0] 
+    if label = 1 [0, 1]
+    if label = 0 [1, 0]
+    '''
+    return transform_label(pickle.load( open("../feature_engg/feature/labels.p", "rb") ) )
+    
+
 features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
-labels = transform_label()
+labels = get_transform_label()
+
+# features = np.random.normal(size=(2294,354))
+# labels = [[1.0,0.0]]*2000 + [[0.0,1.0]]*(2294-2000)
 
 print len(features),len(features[0])
 print len(labels),len(labels[0])
@@ -101,8 +110,8 @@ momentum = 0.99
 eStop = True
 sgd_Nesterov = True
 sgd_lr = 1e-5
-batch_size=50000
-nb_epoch=1000
+batch_size=10000
+nb_epoch=50
 verbose=True
 
 
@@ -115,7 +124,8 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
     '''
     if not save:
         features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
-        features_tr, labels_tr = balanced_subsample(features_tr, labels_tr, subsample_size=3.0)
+        features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size=2.0)
+        labels_tr = transform_label(labels_tr)
         print "Training data balanced-", features_tr.shape, len(labels_tr)
     else:
         features_tr, labels_tr = features,labels
@@ -164,7 +174,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
 
  
 
-run_NN([len(features[0]),2560,2], 0.1, 1e-2, 0.25)
+run_NN([len(features[0]),512,512,2], 0.01, 1e-2, 1)
 
 #arch, reg_coeff, sgd_decay, class_weight_0 [326, 2560, 2] 0.1 0.01 0.25
 

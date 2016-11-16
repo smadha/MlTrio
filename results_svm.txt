@@ -1605,3 +1605,25 @@ avg / total       0.92      0.80      0.84     34416
 
 ()
 done
+
+
+Downsampling - 1:2
+
+clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 1 , 1:1}, cache_size=1000, tol=1e-1, max_iter=1000, verbose=True)
+             precision    recall  f1-score   support
+
+          0       0.90      0.99      0.94     30279
+          1       0.61      0.16      0.25      4137
+
+avg / total       0.86      0.89      0.86     34416
+
+
+clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 1 , 1:1}, cache_size=1000, tol=1e-1, max_iter=1000, verbose=True)
+           precision    recall  f1-score   support
+
+          0       1.00      0.74      0.85     30279
+          1       0.34      0.98      0.51      4137
+
+avg / total       0.92      0.77      0.81     34416
+
+

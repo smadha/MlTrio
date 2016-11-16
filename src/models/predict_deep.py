@@ -2,7 +2,6 @@
 Uses flattened features in feature directory and run a SVM on it
 '''
 
-from simple_expansion import simple_expansion_feature as simp
 from feature_engg import create_features as eng_feat 
 from keras.models import load_model
 import numpy as np
@@ -24,28 +23,9 @@ with open("model/train_config", 'rb') as pickle_file:
 loaded_model = load_model("model/model_deep.h5")
 print("Loaded model from disk")
  
-
-
-test_features = []
-with open("../../bytecup2016data/validate_nolabel.txt") as f:
-    # skip header for prediction
-    f.readline()
-    test_data = f.readline().strip().split(",")
-
-    while test_data and len(test_data) == 2 :
-        question_id = test_data[0]
-        user_id = test_data[1]
-        
-        feature = eng_feat.get_full_feature(question_id, user_id)
-        test_features.append(feature)
-        
-        test_data = f.readline().strip().split(",")
-        
-        
+test_features = pickle.load(open("./feature/validation_features.p", "r") )
         
 print len(test_features)
-
-
 
 col_deleted=save_res["col_deleted"]
 test_features = np.array(test_features)

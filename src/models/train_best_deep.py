@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 import theano
+from models.down_sampling import balanced_subsample
 theano.config.openmp = True
 OMP_NUM_THREADS=24 
 
@@ -96,7 +97,6 @@ with open("model/train_config", 'wb') as pickle_file:
     pickle.dump(save_res, pickle_file, protocol=2)
 print "Dumped config"
 
-
 momentum = 0.99
 eStop = True
 sgd_Nesterov = True
@@ -115,6 +115,8 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
     '''
     if not save:
         features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
+        features_tr, labels_tr = balanced_subsample(features_tr, labels_tr, subsample_size=3.0)
+        print "Training data balanced-", features_tr.shape, len(labels_tr)
     else:
         features_tr, labels_tr = features,labels
         
@@ -128,8 +130,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
     
     # sgd = RMSprop(lr=sgd_lr, rho=0.9, epsilon=1e-08, decay=sgd_decay)
     
-    model.compile(loss='MSE', optimizer=sgd, 
-        metrics=['accuracy'])
+    model.compile(loss='MSE', optimizer=sgd, metrics=['accuracy'])
     # Train Model
     if eStop:
         model.fit(features_tr, labels_tr, nb_epoch=nb_epoch, batch_size=batch_size, 
@@ -163,7 +164,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0, save=False):
 
  
 
-run_NN([len(features[0]),2560,2], 0.1, 1e-2, 0.25,save=True)
+run_NN([len(features[0]),2560,2], 0.1, 1e-2, 0.25)
 
 #arch, reg_coeff, sgd_decay, class_weight_0 [326, 2560, 2] 0.1 0.01 0.25
 

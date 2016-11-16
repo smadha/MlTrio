@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 import numpy as np
 import cPickle as pickle
+from models.down_sampling import balanced_subsample
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -25,6 +26,8 @@ def normalize(X_tr):
 features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
 labels = [int(l) for l in pickle.load( open("../feature_engg/feature/labels.p", "rb") )]
 
+# features = np.random.normal(size=(2294,354))
+# labels = [0]*2000 + [1]*(2294-2000)
 
 print len(features),len(features[0])
 print len(labels),labels[0]
@@ -39,10 +42,27 @@ print len(features),len(features[0])
 print len(labels),labels[0]
 
 features, X_mu, X_sig = normalize(features)
+print "data normalised"
 
 X_tr, X_te,y_tr, y_te = train_test_split(features,labels, train_size = 0.85)
+print "data splitted for testing ", len(y_tr), len(y_te) 
 
-clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 0.75 , 1:1}, cache_size=1000, tol=1e-1)
+X_tr, y_tr = balanced_subsample(X_tr, y_tr, subsample_size=2.0)
+print "Training data balanced-", X_tr.shape, len(y_tr)
+
+clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 1 , 1:1}, cache_size=1000, tol=1e-1, max_iter=100, verbose=True)
+
+clf.fit(X_tr,y_tr)
+
+print("Detailed classification report:")
+print("Model restricted to 100 iteration")
+print ""
+y_true, y_pred = y_te, clf.predict(X_te)
+print(classification_report(y_true, y_pred))
+
+print "Now running with restricting to 1000 iteration"    
+    
+clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 1 , 1:1}, cache_size=1000, tol=1e-1, max_iter=1000, verbose=True)
 
 clf.fit(X_tr,y_tr)
 

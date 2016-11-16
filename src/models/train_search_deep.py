@@ -165,8 +165,8 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
 
  
 arch_range = [[len(features[0]),1024,2], [len(features[0]),1024,512,2], [len(features[0]),1024,1024,2],[len(features[0]),1024,512,256,2]]
-reg_coeffs_range = [1e-5, 1, 5, 1e1, 1e2]
-sgd_decays_range = [1e-5, 1e-2]
+reg_coeffs_range = [5e-7, 1e-6, 5e-6, 1e-5, 5e-5, 5e-4 ]
+sgd_decays_range = [1e-5, 5e-5, 1e-4, 5e-4 ]
 class_weight_0_range = [1]
 subsample_size_range = [2,2.5,3]
 

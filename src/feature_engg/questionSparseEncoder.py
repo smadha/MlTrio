@@ -1,8 +1,8 @@
 from keras.layers import Input, Dense
 from keras.models import Model
-from keras import regularizers
 from keras.optimizers import SGD, RMSprop
 from keras.callbacks import EarlyStopping
+from keras.regularizers import l2, activity_l2
 
 import numpy as np
 import cPickle as pickle
@@ -62,7 +62,7 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     print 'number of features', num_of_features
     input_features = Input(shape=(num_of_features,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(enc_dim, activation='relu',W_regularizer=regularizers.l2(reg_p))(input_features)
+    encoded = Dense(enc_dim, activation='relu',W_regularizer=l2(reg_p), activity_regularizer=activity_l2(0.01))(input_features)
     # "decoded" is the lossy reconstruction of the input
     decoded = Dense(num_of_features, activation='linear')(encoded)
      
@@ -76,7 +76,7 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     # create the decoder model
     decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
     #ksgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    autoencoder.compile(optimizer='adadelta', loss=loss_func)
+    autoencoder.compile(optimizer='rms', loss=loss_func)
      
     hist = autoencoder.fit(ques_data_train, ques_data_train,
                     nb_epoch=100,

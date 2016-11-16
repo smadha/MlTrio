@@ -59,7 +59,7 @@ def train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     print 'number of features', num_of_features
     input_features = Input(shape=(num_of_features,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(enc_dim, activation='relu',W_regularizer=regularizers.l2(reg_p))(input_features)
+    encoded = Dense(enc_dim, activation='relu',W_regularizer=regularizers.l2(reg_p), activity_regularizer=regularizers.activity_l2(0.01))(input_features)
     # "decoded" is the lossy reconstruction of the input
     decoded = Dense(num_of_features, activation='linear')(encoded)
     

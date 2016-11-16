@@ -41,7 +41,7 @@ print len(labels),labels[0]
 
 X_tr, X_te,y_tr, y_te = train_test_split(features,labels, train_size = 0.85)
 
-clf = SVC(kernel='rbf',C=64,gamma=0.1,class_weight={0: 0.4 , 1:1}, cache_size=1000, tol=1e-2)
+clf = SVC(kernel='rbf',C=16,gamma=0.015625,class_weight={0: 0.75 , 1:1}, cache_size=1000, tol=1e-1)
 
 clf.fit(X_tr,y_tr)
 

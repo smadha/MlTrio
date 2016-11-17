@@ -126,7 +126,7 @@ def run_NN(features,labels, arch, reg_coeff, sgd_decay, class_weight_0,subsample
     print "<run_NN>"
     global model_num
     if test:
-        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.8)
+        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.8, random_state=32)
         print "Using separate test data", len(features_tr), len(features_te)
         
         features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size=subsample_size)
@@ -137,7 +137,7 @@ def run_NN(features,labels, arch, reg_coeff, sgd_decay, class_weight_0,subsample
         labels_tr = transform_label(labels_tr)
         print "Using a sample training data"
     
-    call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
+    call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='max')
     
     # Generate Model
     model = genmodel(num_units=arch, reg_coeff=reg_coeff )
@@ -167,7 +167,7 @@ def run_NN(features,labels, arch, reg_coeff, sgd_decay, class_weight_0,subsample
         
         report = classification_report(y_true, y_pred)
         print report
-        with open("results_nn_best.txt", "a") as f:
+        with open("results_pca_search.txt", "a") as f:
             f.write(report)
             f.write("\n")
             f.write(" ".join([str(s) for s in ["arch, reg_coeff, sgd_decay, class_weight_0", arch, reg_coeff, sgd_decay, class_weight_0]]))
@@ -188,13 +188,27 @@ from sklearn import decomposition
 
 orig_length = len(features_orig[0])
 
-for component in range(orig_length/3,orig_length-20,20) :
-    print component
-    pca = decomposition.PCA(n_components=component)
-    pca.fit(features_orig)
-    X = pca.transform(features_orig)
-    
-    run_NN(X,labels_orig,[len(X[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=False, test=True)
+arch_range = [[len(features_orig[0]),512,2], [len(features_orig[0]),1024,2], [len(features_orig[0]),1024,512,2], [len(features_orig[0]),1024,1024,2],  [len(features_orig[0]), 512, 1024, 512,2]]
+reg_coeffs_range = [5e-6, 1e-5, 5e-5, 5e-4, 1e-2 ]
+sgd_decays_range = [1e-6, 1e-5, 5e-5, 1e-4,  1e-2 ]
+comp_range = range(orig_length/4,orig_length/2,10)
+
+for arch in arch_range:
+    for reg_coeff in reg_coeffs_range:
+        for sgd_decay in sgd_decays_range:
+            for component in comp_range :
+                print component
+                pca = decomposition.PCA(n_components=component)
+                pca.fit(features_orig)
+                X = pca.transform(features_orig)
+                
+                # Adding bias
+                np.column_stack((np.ones(len(X)),X))
+                # Making length consistent
+                arch[0] = len(X[0])
+                run_NN(arch, reg_coeff, sgd_decay, 1, 2.5, save=False, test=True)
+                run_NN(arch, reg_coeff, sgd_decay, 1, 2, save=False, test=True)
+                
 
 
 

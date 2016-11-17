@@ -109,7 +109,9 @@ def modify_data(isNorm):
     else:
         updated_user_data = user_data
 
+    num_rows = np.shape(updated_user_data)[0]
     
+    updated_user_data = np.column_stack(( np.ones(num_rows), updated_user_data))
 
     user_data_train = updated_user_data[0:27000]
     user_data_test = updated_user_data[27000:28763]
@@ -119,7 +121,7 @@ def modify_data(isNorm):
 def gridSearch():
     normalise_value = [True, False]
     loss_func_arr = ['mse','kld']
-    reg_param = [0.0001, 0.001, 0.3, 0.1, 1,2]
+    reg_param = [0.00001, 0.0001, 0.001, 0.3, 0.1, 1,2]
     encoding_dim = [100,300,500,1000]
     batch_size = [1000]
     file_suffix = 0

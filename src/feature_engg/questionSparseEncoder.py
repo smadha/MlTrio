@@ -76,7 +76,7 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     # create the decoder model
     decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
     #ksgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    autoencoder.compile(optimizer='rms', loss=loss_func)
+    autoencoder.compile(optimizer='adadelta', loss=loss_func)
      
     hist = autoencoder.fit(ques_data_train, ques_data_train,
                     nb_epoch=100,
@@ -110,15 +110,19 @@ def modify_data(isNorm):
 #             myfile.write( str(d))
     else:
         updated_ques_data = ques_data
+    
+    num_rows = np.shape(updated_ques_data)[0]
+    
+    updated_ques_data = np.column_stack(( np.ones(num_rows), updated_ques_data))
 
-    ques_data_train = updated_ques_data[0:800]
-    ques_data_test = updated_ques_data[800:809]
+    ques_data_train = updated_ques_data[0:8000]
+    ques_data_test = updated_ques_data[8000:8095]
     
     
 def gridSearch():
     normalise_value = [True, False]
     loss_func_arr = ['mse','kld']
-    reg_param = [0.0001, 0.001, 0.3, 0.1, 1,2]
+    reg_param = [0.00001,0.0001, 0.001, 0.3, 0.1, 1,2]
     encoding_dim = [100,300,500,1000]
     batch_size = [1000]
     file_suffix = 0

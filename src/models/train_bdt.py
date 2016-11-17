@@ -9,7 +9,6 @@ import numpy as np
 import cPickle as pickle
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from sklearn.metrics import f1_score, make_scorer
 
 
 def normalize(X_tr):
@@ -58,7 +57,10 @@ num_estimators_range = [50,100,150,200]
 learning_rate_range = [1]
 base_est_range = [ExtraTreesClassifier, DecisionTreeClassifier, RandomForestClassifier]
 
+count_bdt = 10
+
 def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, test=True):
+    global count_bdt
     print "<run_BDT>"
     if test:
         features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
@@ -80,10 +82,12 @@ def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, 
     y_true, y_pred = labels_te, bdt.predict(features_te)
     print classification_report(y_true, y_pred)
     print "base_est, max_tree_depth, num_estimators, learning_rate",str(base_est) , max_tree_depth, num_estimators, learning_rate
-    print "</run_BDT>"
     
     if save:
-        pickle.dump(bdt, open("model/model_bdt.h5","w"), protocol=2)
+        pickle.dump(bdt, open("model/model_bdt_{0}.h5".format(count_bdt),"w"), protocol=2)
+        count_bdt += 1
+        
+    print "</run_BDT>"
     
 for max_tree_depth in max_tree_depth_range:
     for num_estimators in num_estimators_range:

@@ -111,8 +111,8 @@ def modify_data(isNorm):
 
     
 
-    user_data_train = updated_user_data[0:200]
-    user_data_test = updated_user_data[200:257]
+    user_data_train = updated_user_data[0:27000]
+    user_data_test = updated_user_data[27000:28763]
     
     
 
@@ -133,7 +133,7 @@ def gridSearch():
                 for reg_p in reg_param:
                     for enc_dim in encoding_dim:
                         for batch in batch_size:
-                            data ="\n\n\n" + (str(isNorm), ",Loss: ", str(loss_func), ",Reg_param ", str(reg_p), ",Encoding_dim ", str(enc_dim), ",batch size: ", str(batch), ", file_suffix::", file_suffix)
+                            data ="\n\n\n" + str(isNorm) + "  ,Loss: "+ str(loss_func)+ "  ,Reg_param "+ str(reg_p)+ "  ,Encoding_dim "+ str(enc_dim)+ "  ,batch size: "+ str(batch)+" , file_suffix::"+ str(file_suffix)
                             print data
                             myfile.write(str(data))
                             train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch)

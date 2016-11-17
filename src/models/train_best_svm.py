@@ -45,7 +45,7 @@ features, X_mu, X_sig = normalize(features)
 print "data normalised"
 
 save_res = {"col_deleted":col_deleted,"X_mu":X_mu,"X_sig":X_sig}
-with open("model/train_config", 'wb') as pickle_file:
+with open("model/train_config_svm.p", 'wb') as pickle_file:
     pickle.dump(save_res, pickle_file, protocol=2)
 print "Dumped config"
 

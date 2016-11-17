@@ -16,7 +16,7 @@ def normalize_test(X_te, X_mu, X_sig):
     X_te = (X_te - X_mu)/X_sig
     return X_te 
 
-with open("model/train_config", 'rb') as pickle_file:
+with open("model/train_config_svm.p", 'rb') as pickle_file:
     save_res = pickle.load(pickle_file)
 
 loaded_model = pickle.load(open("./model/model_svm_dsample.p","r"))

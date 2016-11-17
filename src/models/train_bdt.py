@@ -66,7 +66,7 @@ def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, 
         features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
         print "Using separate test data"
     else:
-        features_tr, features_te,labels_tr, labels_te = features,labels, features[0:1000],labels[0:1000]
+        features_tr, features_te,labels_tr, labels_te = features,features[0:1000],labels, labels[0:1000]
         print "Using a sample training data"
         
         

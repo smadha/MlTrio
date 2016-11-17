@@ -85,6 +85,7 @@ def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, 
     
     if save:
         pickle.dump(bdt, open("model/model_bdt_{0}.h5".format(count_bdt),"w"), protocol=2)
+        print "Saved model -> model/model_bdt_{0}.h5".format(count_bdt)
         count_bdt += 1
         
     print "</run_BDT>"

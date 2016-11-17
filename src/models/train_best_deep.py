@@ -114,25 +114,29 @@ batch_size=5000
 nb_epoch=100
 verbose=True
 
-model_num=10 
+model_num=20 
 
-def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=False):
+def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=False, test=True):
     '''
     Runs NN with give params obtained from grid search. 
     If save is enabled - Runs and saves model on full training set
     If save is disable - Takes out a test data and runs on reamaing training set. Prints a classification report.
      
     '''
+    print "<run_NN>"
     global model_num
-    if not save:
-        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
+    if test:
+        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.8)
+        print "Using separate test data", len(features_tr), len(features_te)
+        
         features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size=subsample_size)
         labels_tr = transform_label(labels_tr)
         print "Training data balanced-", features_tr.shape, len(labels_tr)
     else:
-        features_tr, labels_tr =  balanced_subsample(features, original_label(labels), subsample_size=subsample_size) 
+        features_tr, labels_tr, features_te, labels_te =  balanced_subsample(features, original_label(labels), subsample_size=subsample_size), features[0:1000], labels[0:1000] 
         labels_tr = transform_label(labels_tr)
-        
+        print "Using a sample training data"
+    
     call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
     
     # Generate Model
@@ -176,10 +180,12 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
         print "Saved model to disk", "model/model_deep_{0}.h5".format(model_num)
         model_num+=1
     
+    print "</run_NN>"
+    
 
-run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, True)
-run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, True)
-run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, True)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=False, test=True)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=False, test=True)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, save=False, test=True)
 
 
 

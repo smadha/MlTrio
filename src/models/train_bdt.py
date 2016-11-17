@@ -89,11 +89,13 @@ def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, 
         count_bdt += 1
         
     print "</run_BDT>"
+
+if __name__ == '__main__':
     
-for max_tree_depth in max_tree_depth_range:
-    for num_estimators in num_estimators_range:
-        for learning_rate in learning_rate_range: 
-            for base_est in base_est_range:
-                run_BDT(base_est, max_tree_depth, num_estimators, learning_rate)
-            
-            
+    for max_tree_depth in max_tree_depth_range:
+        for num_estimators in num_estimators_range:
+            for learning_rate in learning_rate_range: 
+                for base_est in base_est_range:
+                    run_BDT(base_est, max_tree_depth, num_estimators, learning_rate)
+                
+                

@@ -10,6 +10,7 @@ import cPickle as pickle
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
+import threading
 
 def normalize(X_tr):
     ''' Normalize training and test data features
@@ -52,10 +53,12 @@ with open("model/train_config_bdt.p", 'wb') as pickle_file:
 print "Dumped config"
 
 
-max_tree_depth_range = [2,4,8,16,32]
-num_estimators_range = [50,100,150,200]
+max_tree_depth_range = [1,2,4,8,16,32]
+num_estimators_range = [25,50,100,150,200]
 learning_rate_range = [1]
-base_est_range = [ExtraTreesClassifier, DecisionTreeClassifier, RandomForestClassifier]
+base_est_range = [RandomForestClassifier]
+
+NUM_THREADS = 1
 
 count_bdt = 10
 
@@ -63,8 +66,8 @@ def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, 
     global count_bdt
     print "<run_BDT>"
     if test:
-        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
-        print "Using separate test data"
+        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.7, random_state=32)
+        print "Using separate test data", len(features_tr), len(features_te)
     else:
         features_tr, features_te,labels_tr, labels_te = features,features[0:1000],labels, labels[0:1000]
         print "Using a sample training data"
@@ -84,18 +87,27 @@ def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, 
     print "base_est, max_tree_depth, num_estimators, learning_rate",str(base_est) , max_tree_depth, num_estimators, learning_rate
     
     if save:
-        pickle.dump(bdt, open("model/model_bdt_{0}.h5".format(count_bdt),"w"), protocol=2)
-        print "Saved model -> model/model_bdt_{0}.h5".format(count_bdt)
+        pickle.dump(bdt, open("model/model_bdt_{0}.p".format(count_bdt),"w"), protocol=2)
+        print "Saved model -> model/model_bdt_{0}.p".format(count_bdt)
         count_bdt += 1
         
     print "</run_BDT>"
 
 if __name__ == '__main__':
-    
+    threads = []
     for max_tree_depth in max_tree_depth_range:
         for num_estimators in num_estimators_range:
             for learning_rate in learning_rate_range: 
                 for base_est in base_est_range:
-                    run_BDT(base_est, max_tree_depth, num_estimators, learning_rate)
+                    if len(threads) >= NUM_THREADS:
+                        threads[0].join()
+                        for thread in threads:
+                            if not thread.isAlive():
+                                threads.remove(thread)
+                        
+                    t = threading.Thread(target=run_BDT,args=(base_est, max_tree_depth, num_estimators, learning_rate))
+                    threads.append(t)
+                    t.start()
+            
                 
                 

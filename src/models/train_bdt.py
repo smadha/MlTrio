@@ -3,6 +3,8 @@ Trains a boosting tree
 '''
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import cPickle as pickle
 from sklearn.model_selection import train_test_split
@@ -24,11 +26,11 @@ def normalize(X_tr):
     return X_tr, X_mu, X_sig
 
 
-# features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
-# labels = [int(l) for l in pickle.load( open("../feature_engg/feature/labels.p", "rb") )]
+features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
+labels = [int(l) for l in pickle.load( open("../feature_engg/feature/labels.p", "rb") )]
 
-features = np.random.normal(size=(2294,354))
-labels = [0]*2000 + [1]*(2294-2000)
+# features = np.random.normal(size=(2294,354))
+# labels = [0]*2000 + [1]*(2294-2000)
 
 print len(features),len(features[0])
 print len(labels),labels[0]
@@ -51,11 +53,13 @@ with open("model/train_config_bdt.p", 'wb') as pickle_file:
 print "Dumped config"
 
 
-max_tree_depth_range = [4]
-num_estimators_range = [100]
+max_tree_depth_range = [2,4,8,16,32]
+num_estimators_range = [50,100,150,200]
 learning_rate_range = [1]
+base_est_range = [ExtraTreesClassifier, DecisionTreeClassifier, RandomForestClassifier]
 
-def run_BDT(max_tree_depth, num_estimators,learning_rate, save=False, test=True):
+def run_BDT(base_est, max_tree_depth, num_estimators,learning_rate, save=False, test=True):
+    print "<run_BDT>"
     if test:
         features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
         print "Using separate test data"
@@ -63,8 +67,9 @@ def run_BDT(max_tree_depth, num_estimators,learning_rate, save=False, test=True)
         features_tr, features_te,labels_tr, labels_te = features,labels, features[0:1000],labels[0:1000]
         print "Using a sample training data"
         
+        
     # Create and fit an AdaBoosted decision tree
-    bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=max_tree_depth), n_estimators=num_estimators)
+    bdt = AdaBoostClassifier(base_estimator=base_est(max_depth=max_tree_depth), n_estimators=num_estimators)
     
     bdt.fit(features_tr, labels_tr)
     
@@ -74,7 +79,8 @@ def run_BDT(max_tree_depth, num_estimators,learning_rate, save=False, test=True)
     print("Classification report on sample/test data:")
     y_true, y_pred = labels_te, bdt.predict(features_te)
     print classification_report(y_true, y_pred)
-    print "max_tree_depth, num_estimators, learning_rate",max_tree_depth, num_estimators, learning_rate
+    print "base_est, max_tree_depth, num_estimators, learning_rate",str(base_est) , max_tree_depth, num_estimators, learning_rate
+    print "</run_BDT>"
     
     if save:
         pickle.dump(bdt, open("model/model_bdt.h5","w"), protocol=2)
@@ -82,6 +88,7 @@ def run_BDT(max_tree_depth, num_estimators,learning_rate, save=False, test=True)
 for max_tree_depth in max_tree_depth_range:
     for num_estimators in num_estimators_range:
         for learning_rate in learning_rate_range: 
-            run_BDT(max_tree_depth, num_estimators, learning_rate)
+            for base_est in base_est_range:
+                run_BDT(base_est, max_tree_depth, num_estimators, learning_rate)
             
             

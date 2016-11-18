@@ -3,8 +3,8 @@ import cPickle as pickle
 import numpy as np
 from collections import Counter
 
-best_user_words = itemlist = pickle.load(open("./feature/best_user_words.p", "rb"))
-best_ques_words = itemlist = pickle.load(open("./feature/best_ques_words.p", "rb"))
+best_user_words = pickle.load(open("./feature/best_user_words.p", "rb"))
+best_ques_words = pickle.load(open("./feature/best_ques_words.p", "rb"))
 
 def get_one_feature(item_set, global_set):
     '''

@@ -18,4 +18,4 @@ def add_all_user(fname):
 if __name__ == '__main__':
     add_all_user("../bytecup2016data/test_nolabel.txt")
     add_all_user("../bytecup2016data/validate_nolabel.txt")
-    pickle.dump(users_va_te, open("../bytecup2016data/users_va_te.p","wb"), protocol=2)
+    pickle.dump(list(users_va_te) , open("../bytecup2016data/users_va_te.p","wb"), protocol=2)

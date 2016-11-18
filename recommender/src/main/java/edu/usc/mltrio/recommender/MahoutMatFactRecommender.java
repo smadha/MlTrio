@@ -14,24 +14,10 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 
 /**
  * Find best num_neigh and similarity matrix using validation
- * Neigh - 1110 Acc - 0.6704911610004202
- * Neigh - 110 Acc - 0.6675216277313736
- * Neigh - 710 Acc - 0.6682084557050264
  * 
- * Neigh - 64 min_similarity - 0.0 Acc - 0.6498210621159797
- * Neigh - 64 min_similarity - 0.01 Acc - 0.6641040001442645
- * Neigh - 64 min_similarity - 0.05 Acc - 0.6438712743672923
- * Neigh - 128 min_similarity - 0.0 Acc - 0.6615997598185176
- * Neigh - 128 min_similarity - 0.01 Acc - 0.6568353151610219
- * Neigh - 128 min_similarity - 0.05 Acc - 0.6634960395791719
- * Neigh - 512 min_similarity - 0.0 Acc - 0.6680383943763619
- * Neigh - 512 min_similarity - 0.01 Acc - 0.6574531099672709
- * Neigh - 512 min_similarity - 0.05 Acc - 0.6592442161957328
- * Neigh - 1024 min_similarity - 0.0 Acc - 0.6468725403075101
- * Neigh - 1024 min_similarity - 0.01 Acc - 0.6512808289717522
- * Neigh - 1024 min_similarity - 0.05 Acc - 0.6536606152690998
+ * numFeatures - 64 lambda - 1.0E-4 Acc - 0.3511877294688672
+ * numFeatures - 64 lambda - 0.001 Acc - 0.19067660161192174
  * 
- * Similarity TanimotoCoefficientSimilarity
  */
 public class MahoutMatFactRecommender implements RecommenderBuilder{
 	
@@ -50,8 +36,8 @@ public class MahoutMatFactRecommender implements RecommenderBuilder{
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
-		int [] numFeaturesArr = {64,128,512,1024};
-		double [] lambdaArr = {0.0001, 0.001, 0.01, 0.1, 1};
+		int [] numFeaturesArr = {16,32,64,128,512};
+		double [] lambdaArr = {0.00001,0.0001, 0.001, 0.01};
 		
 		for(int numFeaturesI : numFeaturesArr){
 			for(double lambdaI : lambdaArr ){

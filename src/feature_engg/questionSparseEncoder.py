@@ -62,7 +62,7 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     print 'number of features', num_of_features
     input_features = Input(shape=(num_of_features,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(enc_dim, activation='relu',W_regularizer=l2(reg_p), activity_regularizer=activity_l2(0.01))(input_features)
+    encoded = Dense(enc_dim, activation='relu',W_regularizer=l2(reg_p))(input_features)
     # "decoded" is the lossy reconstruction of the input
     decoded = Dense(num_of_features, activation='linear')(encoded)
      
@@ -75,8 +75,8 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     decoder_layer = autoencoder.layers[-1]
     # create the decoder model
     decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
-    #ksgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    autoencoder.compile(optimizer='adadelta', loss=loss_func)
+    ksgd = SGD(lr=0.01, decay=1e-6, momentum=0.99, nesterov=True)
+    autoencoder.compile(optimizer=ksgd, loss=loss_func)
      
     hist = autoencoder.fit(ques_data_train, ques_data_train,
                     nb_epoch=100,
@@ -111,20 +111,19 @@ def modify_data(isNorm):
     else:
         updated_ques_data = ques_data
     
-    num_rows = np.shape(updated_ques_data)[0]
-    
-    updated_ques_data = np.column_stack(( np.ones(num_rows), updated_ques_data))
+    #num_rows = np.shape(updated_ques_data)[0]
+    #updated_ques_data = np.column_stack(( np.ones(num_rows), updated_ques_data))
 
     ques_data_train = updated_ques_data[0:8000]
     ques_data_test = updated_ques_data[8000:8095]
     
     
 def gridSearch():
-    normalise_value = [True, False]
-    loss_func_arr = ['mse','kld']
-    reg_param = [0.00001,0.0001, 0.001, 0.3, 0.1, 1,2]
-    encoding_dim = [100,300,500,1000]
-    batch_size = [1000]
+    normalise_value = [True]
+    loss_func_arr = ['mse']
+    reg_param = [0.0001, 0.001,0.01,0.1]
+    encoding_dim = [300]
+    batch_size = [700]
     file_suffix = 0
     
     with open("ques_parameters.txt", "a+") as myfile:

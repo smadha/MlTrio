@@ -23,8 +23,8 @@ def normalize(X_tr):
     return X_tr, X_mu, X_sig
 
 
-features = pickle.load( open("../feature_engg/feature/all_features.p", "rb") )
-labels = [int(l) for l in pickle.load( open("../feature_engg/feature/labels.p", "rb") )]
+features = pickle.load( open("../feature_engg/encodedFeatures/encoded_completed_features.p", "rb") )
+labels = [int(l) for l in pickle.load( open("../feature_engg/encodedFeatures/labels.p", "rb") )]
 
 # features = np.random.normal(size=(2294,354))
 # labels = [0]*2000 + [1]*(2294-2000)

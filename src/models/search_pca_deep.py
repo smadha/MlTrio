@@ -203,7 +203,7 @@ for arch in arch_range:
                 X = pca.transform(features_orig)
                 
                 # Adding bias
-                np.column_stack((np.ones(len(X)),X))
+                X = np.column_stack((np.ones(len(X)),X))
                 # Making length consistent
                 arch[0] = len(X[0])
                 run_NN(X, labels_orig,arch, reg_coeff, sgd_decay, 1, 2.5, save=False, test=True)

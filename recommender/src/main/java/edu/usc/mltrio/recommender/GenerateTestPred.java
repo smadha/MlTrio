@@ -19,6 +19,7 @@ public class GenerateTestPred {
 		StringBuilder resBuilder = new StringBuilder("");
 
 		double max = 0;
+		double min = 10000;
 
 		List<Long> userIDList = new ArrayList<Long>();
 		List<Long> quesIDList = new ArrayList<Long>();
@@ -43,6 +44,7 @@ public class GenerateTestPred {
 				pred = Constants.DEFAULT_VALUE;
 			}
 			max = Math.max(max, pred);
+			min = Math.min(max, pred);
 			avg = (avg + pred)/2;
 
 			userIDList.add(userID);
@@ -58,7 +60,7 @@ public class GenerateTestPred {
 
 		br.close();
 		
-		System.out.println(max + " = " + avg);
+		System.out.println("Max- " + max + " , Avg- " + avg + " , Min- " + min);
 		for (int i = 0; i < userIDList.size(); i++) {
 
 			Long userID = userIDList.get(i);
@@ -66,7 +68,7 @@ public class GenerateTestPred {
 			Double pred = predList.get(i);
 			
 			if (pred >= 0.5) {
-				pred = 0.5 + pred/(max*2);
+				pred = 0.5 + (pred-min)/((max-min)*2);
 //				pred = pred/max;
 
 			} else {

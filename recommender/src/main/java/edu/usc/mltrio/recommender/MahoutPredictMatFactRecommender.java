@@ -16,7 +16,7 @@ public class MahoutPredictMatFactRecommender implements Recommend{
 		DataModel model = new FileDataModel(
 				new File(Constants.INVITED_INFO_TRAIN_MAHOUT_CSV));
 
-		recommender = new MahoutMatFactRecommender(50,0.1,1).buildRecommender(model);
+		recommender = new MahoutMatFactRecommender(16,0.00001,50).buildRecommender(model);
 
 	}
 

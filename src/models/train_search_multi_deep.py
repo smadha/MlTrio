@@ -149,10 +149,12 @@ batch_size=5000
 nb_epoch=100
 verbose=True
 
+features,labels = [] , []
+
+features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
+print "Using separate test data", len(features_tr), len(features_te)
 
 def run_NN(arch, reg_coeff, sgd_decay, subsample_size=0, save=False):
-    features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.85)
-    print "Using separate test data", len(features_tr), len(features_te)
 #     features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size = subsample_size)
 #     labels_tr = transform_label(labels_tr)
 #     print "Training data balanced-", features_tr.shape, len(labels_tr)
@@ -205,7 +207,7 @@ def run_NN(arch, reg_coeff, sgd_decay, subsample_size=0, save=False):
     
 
  
-arch_range = [[len(features[0]),1024,len(labels[0])], [len(features[0]),1024,512,len(labels[0])], [len(features[0]),1024,1024,len(labels[0])],[len(features[0]),1024,512,256,len(labels[0])]]
+arch_range = [[len(features_tr[0]),1024,len(labels_tr[0])], [len(features_tr[0]),1024,512,len(labels_tr[0])], [len(features_tr[0]),1024,1024,len(labels_tr[0])],[len(features_tr[0]),1024,512,256,len(labels_tr[0])]]
 reg_coeffs_range = [1e-6, 5e-6, 1e-5, 5e-5, 5e-4 ]
 sgd_decays_range = [1e-6, 1e-5, 5e-5, 1e-4, 5e-4 ]
 class_weight_0_range = [1]

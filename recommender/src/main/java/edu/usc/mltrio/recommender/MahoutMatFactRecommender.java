@@ -18,6 +18,22 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
  * numFeatures - 64 lambda - 1.0E-4 Acc - 0.3511877294688672
  * numFeatures - 64 lambda - 0.001 Acc - 0.19067660161192174
  * 
+ * numFeatures - 16 lambda - 1.0E-5 Acc - 1.9206223071447528
+numFeatures - 16 lambda - 1.0E-4 Acc - 0.4778584128588928
+numFeatures - 16 lambda - 0.001 Acc - 0.23063901276558188
+numFeatures - 16 lambda - 0.01 Acc - 0.15821677404183898
+numFeatures - 32 lambda - 1.0E-5 Acc - 1.3967344276030973
+numFeatures - 32 lambda - 1.0E-4 Acc - 0.3938753453566021
+numFeatures - 32 lambda - 0.001 Acc - 0.22004050429783453
+numFeatures - 32 lambda - 0.01 Acc - 0.1508279857389991
+numFeatures - 64 lambda - 1.0E-5 Acc - 1.860971584323923
+numFeatures - 64 lambda - 1.0E-4 Acc - 0.40138566167735484
+numFeatures - 64 lambda - 0.001 Acc - 0.19399877313013533
+numFeatures - 64 lambda - 0.01 Acc - 0.14611190250341966
+numFeatures - 128 lambda - 1.0E-5 Acc - 1.1303028809706241
+numFeatures - 128 lambda - 1.0E-4 Acc - 0.30393174377740173
+numFeatures - 128 lambda - 0.001 Acc - 0.1826482290884484
+numFeatures - 128 lambda - 0.01 Acc - 0.15133927458241486
  */
 public class MahoutMatFactRecommender implements RecommenderBuilder{
 	
@@ -36,9 +52,10 @@ public class MahoutMatFactRecommender implements RecommenderBuilder{
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
-		int [] numFeaturesArr = {16,32,64,128,512};
-		double [] lambdaArr = {0.00001,0.0001, 0.001, 0.01};
-		
+		int [] numFeaturesArr = {16,32};
+		double [] lambdaArr = {0.00001,0.000001,0.0001};
+		int[] iterArr = {20,30,50,100}
+				
 		for(int numFeaturesI : numFeaturesArr){
 			for(double lambdaI : lambdaArr ){
 				RecommenderBuilder builder = new MahoutMatFactRecommender(numFeaturesI, lambdaI, 50);

@@ -7,23 +7,21 @@ import cPickle as pickle
 filename = "naive_bayes_model_"
 
 print 'loading user based simple best word feature file'
-#train_data = pickle.load(open("./feature/simple_best_word_features.p", "rb"))
-#print 'np.shape(data) ', np.shape(train_data)
 user_based_train_data = pickle.load(open("./feature/user_based_best_word_features.p", "rb"))
+
+print 'loading user based simple best word label file'
 user_based_train_data_lables = pickle.load(open("./feature/user_based_labels.p", "rb"))
 
-train_target_labels = pickle.load(open("./feature/labels.p", "rb"))
-print 'np.shape(labels) ', np.shape(train_target_labels)
 
 
 def train_NB(train_data, train_label, count):
     print 'training NB'
     
     nb_model = MultinomialNB()
-    y_pred_prob = nb_model.fit(train_data, train_target_labels).predict_proba(train_data)
+    y_pred_prob = nb_model.fit(train_data, train_label).predict_proba(train_data)
     
-    y_pred = nb_model.fit(train_data, train_target_labels).predict(train_data)
-    print("No. of mislabeled points out of a total %d points : %d" %(train_data.shape[0], (train_target_labels != y_pred).sum()))
+    y_pred = nb_model.fit(train_data, train_label).predict(train_data)
+    print("No. of mislabeled points out of a total %d points : %d" %(train_data.shape[0], (train_label != y_pred).sum()))
     
     #pickle.dump(y_pred_prob, open("NB_predicted_probabilities.","wb"))
     dump_model(count, nb_model, train_data)
@@ -53,7 +51,7 @@ def dump_model(file_suffix, nb_model, testdata):
     
        
 if __name__ == "__main__":
-    train_NB()
+    train_user_based_models()
 
 
 

@@ -60,21 +60,35 @@ def train_ques_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     num_of_features = np.shape(ques_data_train)[1]
     #call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
     print 'number of features', num_of_features
-    input_features = Input(shape=(num_of_features,))
+    
     # "encoded" is the encoded representation of the input
-    encoded = Dense(enc_dim, activation='relu',W_regularizer=l2(reg_p))(input_features)
+    #encoded = Dense(enc_dim, activation='relu',W_regularizer=l2(reg_p))(input_features)
     # "decoded" is the lossy reconstruction of the input
-    decoded = Dense(num_of_features, activation='linear')(encoded)
+#     decoded = Dense(num_of_features, activation='linear')(encoded)
+    
+    
+    input_img = Input(shape=(num_of_features,))
+    encoded = Dense(enc_dim*2, activation='relu',W_regularizer=l2(reg_p))(input_img)
+    encoded = Dense(enc_dim, activation='relu',W_regularizer=l2(reg_p))(encoded)
+    decoded = Dense(enc_dim*2, activation='relu')(encoded)
+    decoded = Dense(num_of_features, activation='linear')(decoded)
      
+    ##ENCODER MODEL for predictions
     # this model maps an input to its reconstruction
-    autoencoder = Model(input=input_features, output=decoded)
-    encoder = Model(input=input_features, output=encoded)
+    autoencoder = Model(input=input_img, output=decoded)
+    encoder = Model(input=input_img, output=encoded)
+    
+    
+    ##DECODER MODEL
     # create a placeholder for an encoded (32-dimensional) input
-    encoded_input = Input(shape=(enc_dim,))
+    #encoded_input = Input(shape=(enc_dim,))
     # retrieve the last layer of the autoencoder model
-    decoder_layer = autoencoder.layers[-1]
+    #decoder_layer = autoencoder.layers[-1]
     # create the decoder model
-    decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
+    #decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
+    ##DECODER MODEL END
+    
+    
     ksgd = SGD(lr=0.01, decay=1e-6, momentum=0.99, nesterov=True)
     autoencoder.compile(optimizer=ksgd, loss=loss_func)
      
@@ -121,8 +135,8 @@ def modify_data(isNorm):
 def gridSearch():
     normalise_value = [True]
     loss_func_arr = ['mse']
-    reg_param = [0.0001, 0.001,0.01,0.1]
-    encoding_dim = [300]
+    reg_param = [0.001,0.01,0.1]
+    encoding_dim = [500]
     batch_size = [700]
     file_suffix = 0
     

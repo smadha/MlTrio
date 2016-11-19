@@ -2,6 +2,7 @@ import simple_expansion.simple_expansion_feature as simp
 import cPickle as pickle
 import numpy as np
 from collections import Counter
+from collections import defaultdict
 
 best_user_words = pickle.load(open("./feature/best_user_words.p", "rb"))
 best_ques_words = pickle.load(open("./feature/best_ques_words.p", "rb"))
@@ -31,7 +32,7 @@ def get_user_feature(user):
     ## can be replaced by word cluster ids
     feature.extend(get_one_feature(Counter(user[2].split("/")), best_user_words))
     ## can be replaced by char cluster ids
-    feature.extend(get_one_feature(Counter(user[3].split("/")), simp.user_char_id))
+    #feature.extend(get_one_feature(Counter(user[3].split("/")), simp.user_char_id))
     
     return feature
 
@@ -48,7 +49,7 @@ def get_ques_feature(question):
     ## can be replaced by cluster ids
     feature.extend(get_one_feature(Counter(question[2].split("/")), best_ques_words))
     ## can be replaced by cluster ids
-    feature.extend(get_one_feature(Counter(question[3].split("/")), simp.question_char_id))
+    #feature.extend(get_one_feature(Counter(question[3].split("/")), simp.question_char_id))
     ## Fill #upvotes
     feature.append(int(question[4]))
     ## Fill #answers
@@ -104,8 +105,35 @@ def main_fn():
     pickle.dump(features, open("./feature/simple_best_word_features.p", "wb") )
     pickle.dump(labels, open("./feature/labels.p", "wb") )
         
-    print "done"    
+    print "done"  
+    
+def load_user_based_features():
+
+    user_based_features = defaultdict(list)
+    user_based_labels = defaultdict(list)
+    features = []
+    with open(simp.INVITED_INFO_TRAIN) as f:
+        training_data = f.readline().strip().split("\t")
+        while training_data and len(training_data) == 3 :
+            
+            question = simp.questions[training_data[0]]
+            user = simp.users[training_data[1]]
+            
+            features.append(get_full_feature(question, user))
+            user_based_features[training_data[1]].append(features)
+            user_based_labels[training_data[1]].append(training_data[2])
+            if len(features) % 1000 == 0:
+                print len(features)
+                
+            training_data = f.readline().strip().split("\t")
+            
+    print 'dumping data...'    
+    pickle.dump(user_based_features, open("feature/user_based_best_word_features.p", "wb") )
+    pickle.dump(user_based_labels, open("feature/user_based_labels.p", "wb") )
+        
+    print "done"   
     
 if __name__ == "__main__":
     # stuff only to run when not called via 'import' here
-    main_fn() 
+    #main_fn()
+    load_user_based_features() 

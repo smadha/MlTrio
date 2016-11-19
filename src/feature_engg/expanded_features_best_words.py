@@ -128,8 +128,8 @@ def load_user_based_features():
                 print len(features)
                 
             training_data = f.readline().strip().split("\t")
-            if count > 5000:
-                break
+#             if count > 5000:
+#                 break
             
     print 'dumping data...'    
     pickle.dump(user_based_features, open("feature/user_based_best_word_features.p", "wb"), protocol=2)

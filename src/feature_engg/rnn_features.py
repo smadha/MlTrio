@@ -29,7 +29,7 @@ def main_fn():
     print "best_words", len(best_words)
     print "best_chars", len(best_chars)
     
-    with open(simp.INVITED_INFO_TRAIN) as f:
+    with open("../../bytecup2016data/invited_info_train_PROC_tr.txt") as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
             

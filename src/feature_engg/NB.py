@@ -16,15 +16,15 @@ user_based_train_data_lables = pickle.load(open("./feature/user_based_labels.p",
 
 def train_NB(train_data, train_label, count):
     print 'training NB'
+    print 'type(train_data)', type(train_data)
+    print 'type(train_label)', type(train_label)
+    train_data = np.asarray(train_data)
+    train_label = np.asarray(train_label)
     
     nb_model = MultinomialNB()
-    y_pred_prob = nb_model.fit(train_data, train_label).predict_proba(train_data)
-    
-    y_pred = nb_model.fit(train_data, train_label).predict(train_data)
-    print("No. of mislabeled points out of a total %d points : %d" %(train_data.shape[0], (train_label != y_pred).sum()))
-    
-    #pickle.dump(y_pred_prob, open("NB_predicted_probabilities.","wb"))
-    dump_model(count, nb_model, train_data)
+    #y_pred_prob = nb_model.fit(train_data, train_label).predict_proba(train_data)
+    nb_model.fit(train_data, train_label)
+    dump_model(count, nb_model, train_data,train_label)
     
 def train_user_based_models():
     print 'training user based Naive based models'
@@ -34,18 +34,14 @@ def train_user_based_models():
     for user_key in user_keys:
         print 'user_key', user_key
         print '\n\n'
-        print 'user_based_train_data[user_key]', user_based_train_data[user_key]
-        print '\n\n'
-        print 'user_based_train_data_lables[user_key]', user_based_train_data_lables[user_key]
-        print '\n\n'
-        train_NB(user_based_train_data[user_key],user_based_train_data_lables[user_key], count)
+        train_NB(user_based_train_data[user_key][0],user_based_train_data_lables[user_key], count)
         count = count + 1
         break
     
 
-def dump_model(file_suffix, nb_model, testdata):
+def dump_model(file_suffix, nb_model, testdata, testlabel):
     
-    updated_file_name = filename + file_suffix+ ".pkl"
+    updated_file_name = filename + str(file_suffix)+ ".pkl"
     with open(updated_file_name, 'wb') as fid:
         pickle.dump(nb_model, fid)    
 
@@ -53,8 +49,8 @@ def dump_model(file_suffix, nb_model, testdata):
     with open(updated_file_name, 'rb') as fid:
         gnb_loaded = pickle.load(fid)
     
-    gnb_loaded.predict(testdata)
-    
+    y_pred = gnb_loaded.predict(testdata)
+    print("No. of mislabeled points out of a total %d points : %d" %(testdata.shape[0], (testlabel != y_pred).sum()))
        
 if __name__ == "__main__":
     train_user_based_models()

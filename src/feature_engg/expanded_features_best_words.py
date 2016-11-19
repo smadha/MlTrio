@@ -6,6 +6,7 @@ from collections import defaultdict
 
 best_user_words = pickle.load(open("./feature/best_user_words.p", "rb"))
 best_ques_words = pickle.load(open("./feature/best_ques_words.p", "rb"))
+unique_users = pickle.load(open("../../bytecup2016data/users_va_te.p", "rb"))
 
 def get_one_feature(item_set, global_set):
     '''
@@ -120,12 +121,14 @@ def load_user_based_features():
             question = simp.questions[training_data[0]]
             user = simp.users[training_data[1]]
             #print training_data[1], 'user key'
-            features.append(get_full_feature(question, user))
-            user_based_features[training_data[1]].append(features)
-            user_based_labels[training_data[1]].append(training_data[2])
+            if training_data[1] in unique_users:
+                features.append(get_full_feature(question, user))
+                user_based_features[training_data[1]].append(features)
+                user_based_labels[training_data[1]].append(training_data[2])
             count = count +1
-            if len(features) % 1000 == 0:
-                print len(features)
+                
+            if count % 1000 == 0:
+                print count
                 
             training_data = f.readline().strip().split("\t")
 #             if count > 5000:

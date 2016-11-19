@@ -112,6 +112,7 @@ def load_user_based_features():
     user_based_features = defaultdict(list)
     user_based_labels = defaultdict(list)
     features = []
+    count = 0
     with open(simp.INVITED_INFO_TRAIN) as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
@@ -122,10 +123,13 @@ def load_user_based_features():
             features.append(get_full_feature(question, user))
             user_based_features[training_data[1]].append(features)
             user_based_labels[training_data[1]].append(training_data[2])
+            count = count +1
             if len(features) % 1000 == 0:
                 print len(features)
                 
             training_data = f.readline().strip().split("\t")
+            if count > 5000:
+                break
             
     print 'dumping data...'    
     pickle.dump(user_based_features, open("feature/user_based_best_word_features.p", "wb"), protocol=2)

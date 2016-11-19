@@ -7,10 +7,10 @@ import cPickle as pickle
 filename = "naive_bayes_model_"
 
 print 'loading user based simple best word feature file'
-user_based_train_data = pickle.load(open("./feature/user_based_best_word_features.p", "rb"), protocol=2)
+user_based_train_data = pickle.load(open("./feature/user_based_best_word_features.p", "rb"))
 
 print 'loading user based simple best word label file'
-user_based_train_data_lables = pickle.load(open("./feature/user_based_labels.p", "rb"), protocol=2)
+user_based_train_data_lables = pickle.load(open("./feature/user_based_labels.p", "rb"))
 
 
 
@@ -32,6 +32,12 @@ def train_user_based_models():
     user_keys = user_based_train_data.keys()
     count = 0
     for user_key in user_keys:
+        print 'user_key', user_key
+        print '\n\n'
+        print 'user_based_train_data[user_key]', user_based_train_data[user_key]
+        print '\n\n'
+        print 'user_based_train_data_lables[user_key]', user_based_train_data_lables[user_key]
+        print '\n\n'
         train_NB(user_based_train_data[user_key],user_based_train_data_lables[user_key], count)
         count = count + 1
         break

@@ -54,9 +54,9 @@ public class MahoutMatFactRecommender implements RecommenderBuilder{
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
-		int [] numFeaturesArr = {16,32};
-		double [] lambdaArr = {0.01, 0.1, 1};
-		int[] iterArr = {20,30,100};
+		int [] numFeaturesArr = {50,64};
+		double [] lambdaArr = {0.1, 1, 1.5};
+		int[] iterArr = {20,70,100};
 				
 		for(int numFeaturesI : numFeaturesArr){
 			for(double lambdaI : lambdaArr ){

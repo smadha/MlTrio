@@ -39,7 +39,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 print(model.summary())
 
 num_epoch=20
-batch_size=256
+batch_size=64
 verbose = True
 
 call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='max')

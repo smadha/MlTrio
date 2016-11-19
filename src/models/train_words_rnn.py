@@ -10,6 +10,8 @@ from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from sklearn.model_selection import train_test_split
 import cPickle as pickle
+from keras.callbacks import EarlyStopping
+from models.down_sampling import balanced_subsample
 
 # fix random seed for reproducibility
 numpy.random.seed(7)
@@ -38,10 +40,18 @@ print(model.summary())
 
 num_epoch=20
 batch_size=64
+verbose = True
 
-model.fit(X_train, y_train, nb_epoch=num_epoch, batch_size=batch_size)
+call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='max')
+
+print "len before down sampling", len(X_train)
+X_train, y_train = balanced_subsample(X_train, y_train, subsample_size = 2.5, possible_y=['1','0'] )
+print "len after down sampling", len(X_train)
+
+model.fit(X_train, y_train, nb_epoch=num_epoch, batch_size=batch_size,
+          verbose=verbose, callbacks=[call_ES], validation_split=0.2)
+
+model.save("./model/rnn_words.h5", overwrite=True)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
-
-

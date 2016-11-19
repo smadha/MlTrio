@@ -119,42 +119,42 @@ def get_user_tag(user):
     :param user: user raw data
     :return: list of user tags
     '''
-    return user[1].split("/")
+    return user[1].strip().split("/")
 
 def get_question_tag(question):
     '''
     :param question: question raw data
     :return: list of question tags
     '''
-    return question[1].split("/")
+    return question[1].strip().split("/")
 
 def get_question_char(question):
     '''
     :param question: question raw data
     :return: list of char ids for this question
     '''
-    return question[3].split("/")
+    return question[3].strip().split("/")
 
 def get_user_char(user):
     '''
     :param user: user raw data
     :return: list of char ids for this question
     '''
-    return user[3].split("/")
+    return user[3].strip().split("/")
    
 def get_question_words(question):
     '''
     :param question: question raw data
     :return: list of char ids for this question
     '''
-    return question[2].split("/")
+    return question[2].strip().split("/")
 
 def get_user_words(user):
     '''
     :param user: user raw data
     :return: list of char ids for this question
     '''
-    return user[2].split("/")
+    return user[2].strip().split("/")
    
 
 def get_full_feature(question, user):

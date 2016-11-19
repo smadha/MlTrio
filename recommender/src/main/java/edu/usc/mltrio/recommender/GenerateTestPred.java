@@ -10,7 +10,7 @@ public class GenerateTestPred {
 
 	public static void main(String[] args) throws Exception{
 		// LensKitRecommender MahoutPredictUserBasedRecommender MahoutPredictMatFactRecommender MahoutPredictItemBasedRecommender
-		Recommend rec  = new MahoutPredictItemBasedRecommender();
+		Recommend rec  = new MahoutPredictMatFactRecommender();
 		
 		String csvFile = Constants.TEST_MAHOUT_CSV;
 		String line = "";
@@ -44,7 +44,7 @@ public class GenerateTestPred {
 				pred = Constants.DEFAULT_VALUE;
 			}
 			max = Math.max(max, pred);
-			min = Math.min(max, pred);
+			min = Math.min(min, pred);
 			avg = (avg + pred)/2;
 
 			userIDList.add(userID);
@@ -67,13 +67,7 @@ public class GenerateTestPred {
 			Long quesID = quesIDList.get(i);
 			Double pred = predList.get(i);
 			
-			if (pred >= 0.5) {
-				pred = 0.5 + (pred-min)/((max-min)*2);
-//				pred = pred/max;
-
-			} else {
-				pred = pred/max;
-			}
+			pred = (pred-min)/(max-min);
 
 			// Done for making a classifier output
 //			if (pred >= 0.5) {

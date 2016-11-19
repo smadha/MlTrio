@@ -14,6 +14,7 @@ from sklearn.metrics import classification_report
 
 import theano
 from models.down_sampling import balanced_subsample
+from keras.layers import Dropout
 theano.config.openmp = True
 OMP_NUM_THREADS=16 
 
@@ -48,15 +49,19 @@ def genmodel(num_units, actfn='relu', reg_coeff=0.0, last_act='softmax'):
         if i == 1 and i < len(num_units) - 1:
             model.add(Dense(input_dim=num_units[0], output_dim=num_units[i], activation=actfn, 
                 W_regularizer=Reg.l2(l=reg_coeff), init='glorot_normal'))
+            model.add(Dropout(0.2))
         elif i == 1 and i == len(num_units) - 1:
             model.add(Dense(input_dim=num_units[0], output_dim=num_units[i], activation=last_act, 
                 W_regularizer=Reg.l2(l=reg_coeff), init='glorot_normal'))
+            model.add(Dropout(0.2))
         elif i < len(num_units) - 1:
             model.add(Dense(output_dim=num_units[i], activation=actfn, 
                 W_regularizer=Reg.l2(l=reg_coeff), init='glorot_normal'))
+            model.add(Dropout(0.2))
         elif i == len(num_units) - 1:
             model.add(Dense(output_dim=num_units[i], activation=last_act, 
                 W_regularizer=Reg.l2(l=reg_coeff), init='glorot_normal'))
+        
     return model
 
 def transform_label(labels):
@@ -131,7 +136,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
     
     # sgd = RMSprop(lr=sgd_lr, rho=0.9, epsilon=1e-08, decay=sgd_decay)
     
-    model.compile(loss='MSE', optimizer=sgd, 
+    model.compile(loss='binary_crossentropy', optimizer=sgd, 
         metrics=['accuracy'])
     # Train Model
     if eStop:

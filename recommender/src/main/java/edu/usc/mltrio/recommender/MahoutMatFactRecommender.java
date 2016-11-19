@@ -15,6 +15,8 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 /**
  * Find best num_neigh and similarity matrix using validation
  * 
+ * LOWER THE BETTER
+ * 
  * numFeatures - 64 lambda - 1.0E-4 Acc - 0.3511877294688672
  * numFeatures - 64 lambda - 0.001 Acc - 0.19067660161192174
  * 
@@ -53,8 +55,8 @@ public class MahoutMatFactRecommender implements RecommenderBuilder{
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		
 		int [] numFeaturesArr = {16,32};
-		double [] lambdaArr = {0.00001,0.000001,0.0001};
-		int[] iterArr = {20,30,50,100};
+		double [] lambdaArr = {0.01, 0.1, 1};
+		int[] iterArr = {20,30,100};
 				
 		for(int numFeaturesI : numFeaturesArr){
 			for(double lambdaI : lambdaArr ){
@@ -62,7 +64,7 @@ public class MahoutMatFactRecommender implements RecommenderBuilder{
 					RecommenderBuilder builder = new MahoutMatFactRecommender(numFeaturesI, lambdaI, iterI);
 					
 					double result = evaluator.evaluate(builder, null, model, 0.8, 0.8);
-					System.out.println("numFeatures - "+ numFeaturesI + " lambda - "+ lambdaI + " Acc - " + result);
+					System.out.println("numFeatures - "+ numFeaturesI + " lambda - "+ lambdaI + " iter - "+ iterI + " Acc - " + result);
 				}
 			}
 		}

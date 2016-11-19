@@ -39,7 +39,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 print(model.summary())
 
 num_epoch=20
-batch_size=512
+batch_size=256
 verbose = True
 
 call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='max')
@@ -49,9 +49,12 @@ X_train, y_train = balanced_subsample(X_train, y_train, subsample_size = 2.5, po
 print "len after down sampling", len(X_train)
 
 model.fit(X_train, y_train, nb_epoch=num_epoch, batch_size=batch_size,
-          verbose=verbose, callbacks=[call_ES], validation_split=0.1)
+          verbose=verbose, callbacks=[call_ES], validation_split=0.2)
+
+model.save("./model/rnn_tag.h5", overwrite=True)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
+
 
 

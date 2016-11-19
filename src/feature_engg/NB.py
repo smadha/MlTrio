@@ -7,10 +7,10 @@ import cPickle as pickle
 filename = "naive_bayes_model_"
 
 print 'loading user based simple best word feature file'
-user_based_train_data = pickle.load(open("./feature/user_based_best_word_features.p", "rb"))
+user_based_train_data = pickle.load(open("./feature/user_based_best_word_features.p", "rb"), protocol=2)
 
 print 'loading user based simple best word label file'
-user_based_train_data_lables = pickle.load(open("./feature/user_based_labels.p", "rb"))
+user_based_train_data_lables = pickle.load(open("./feature/user_based_labels.p", "rb"), protocol=2)
 
 
 

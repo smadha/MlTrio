@@ -128,8 +128,8 @@ def load_user_based_features():
             training_data = f.readline().strip().split("\t")
             
     print 'dumping data...'    
-    pickle.dump(user_based_features, open("feature/user_based_best_word_features.p", "wb") )
-    pickle.dump(user_based_labels, open("feature/user_based_labels.p", "wb") )
+    pickle.dump(user_based_features, open("feature/user_based_best_word_features.p", "wb"), protocol=2)
+    pickle.dump(user_based_labels, open("feature/user_based_labels.p", "wb"), protocol=2 )
         
     print "done"   
     

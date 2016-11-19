@@ -14,9 +14,9 @@ import cPickle as pickle
 # fix random seed for reproducibility
 numpy.random.seed(7)
 # keep the top n words, zero the rest
-top_item = 165
+top_item = 143
 # truncate and pad input sequences
-max_review_length = 8
+max_review_length = 10
 
 
 X,y = pickle.load(open("../feature_engg/feature/tag_features.p", "r") ), pickle.load(open("../feature_engg/feature/labels.p", "r") )
@@ -35,7 +35,11 @@ model.add(LSTM(100, dropout_W=0.1, dropout_U=0.1))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
-model.fit(X_train, y_train, nb_epoch=3, batch_size=64)
+
+num_epoch=20
+batch_size=64
+
+model.fit(X_train, y_train, nb_epoch=num_epoch, batch_size=batch_size)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))

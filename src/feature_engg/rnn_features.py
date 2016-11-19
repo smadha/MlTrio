@@ -5,7 +5,7 @@ max tag_features 8
 
 chosen best_words 5005
 chosen best_chars 2488
-total tags 163
+total unique tags 143
 user_tags 143 question_tags 20
 '''
 from collections import Counter
@@ -23,6 +23,9 @@ def main_fn():
     best_words = pickle.load(open("./feature/best_words.p", "r"))
     best_chars = pickle.load(open("./feature/best_chars.p", "r"))
     
+    best_words_dict = dict([ (w,idx) for idx,w in enumerate(best_words)])
+    best_chars_dict = dict([ (c,idx) for idx,c in enumerate(best_chars)])
+    
     print "best_words", len(best_words)
     print "best_chars", len(best_chars)
     
@@ -38,13 +41,13 @@ def main_fn():
             char_feature = simp.get_user_char(user)
             char_feature.extend(simp.get_question_char(question))
             # REMOVE LESS FREQUENT ITEMS
-            char_feature = [int(c) for c in char_feature if c in best_chars and c != '' ]
+            char_feature = [best_chars_dict[c] for c in char_feature if c in best_chars and c != '' ]
             char_features.append(char_feature)
             
             word_feature = simp.get_user_words(user)
             word_feature.extend(simp.get_question_words(question))
             # REMOVE LESS FREQUENT ITEMS
-            word_feature = [int(w) for w in word_feature if w in best_words and w != '' ]
+            word_feature = [best_words_dict[w] for w in word_feature if w in best_words and w != '' ]
             word_features.append(word_feature)
             
             tag_feature = simp.get_user_tag(user)

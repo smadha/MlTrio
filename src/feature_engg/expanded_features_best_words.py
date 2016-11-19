@@ -121,7 +121,7 @@ def load_user_based_features():
             question = simp.questions[training_data[0]]
             user = simp.users[training_data[1]]
             #print training_data[1], 'user key'
-            if training_data[1] in unique_users:
+            if training_data[1].strip() in unique_users:
                 features.append(get_full_feature(question, user))
                 user_based_features[training_data[1]].append(features)
                 user_based_labels[training_data[1]].append(training_data[2])

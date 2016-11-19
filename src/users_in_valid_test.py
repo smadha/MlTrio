@@ -12,7 +12,7 @@ def add_all_user(fname):
         while training_data and len(training_data) >= 2 :
             user_id = training_data[1]
             if training_data[2] == "1":
-                users_va_te.add(user_id)
+                users_va_te.add(user_id.strip())
             training_data = f.readline().strip().split("\t")
             
     print len(users_va_te)

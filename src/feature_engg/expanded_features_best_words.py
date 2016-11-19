@@ -7,6 +7,8 @@ from collections import defaultdict
 best_user_words = pickle.load(open("./feature/best_user_words.p", "rb"))
 best_ques_words = pickle.load(open("./feature/best_ques_words.p", "rb"))
 unique_users = pickle.load(open("../../bytecup2016data/users_va_te.p", "rb"))
+unique_ques = pickle.load(open("../../bytecup2016data/ques_va_te.p", "rb"))
+
 
 def get_one_feature(item_set, global_set):
     '''
@@ -117,14 +119,19 @@ def load_user_based_features():
     with open(simp.INVITED_INFO_TRAIN) as f:
         training_data = f.readline().strip().split("\t")
         while training_data and len(training_data) == 3 :
-            features = []
+            #features = []
             question = simp.questions[training_data[0]]
             user = simp.users[training_data[1]]
-            #print training_data[1], 'user key'
-            if training_data[1].strip() in unique_users:
-                features.append(get_full_feature(question, user))
-                user_based_features[training_data[1]].append(features)
-                user_based_labels[training_data[1]].append(training_data[2])
+            user_key = training_data[1]
+            if user_key in unique_users:
+                #features.append()
+                user_based_features[user_key].append(get_full_feature(question, user))
+                user_based_labels[user_key].append([training_data[2]])
+                
+                if user_key == "3128ca5c6625a4fc25f4317a9e65861b":
+                    print np.shape(user_based_features[training_data[1]])
+                    print np.shape(user_based_labels[training_data[1]])
+                    
             count = count +1    
             if count % 1000 == 0:
                 print count
@@ -137,9 +144,43 @@ def load_user_based_features():
     pickle.dump(user_based_features, open("feature/user_based_best_word_features.p", "wb"), protocol=2)
     pickle.dump(user_based_labels, open("feature/user_based_labels.p", "wb"), protocol=2 )
         
+    print "done"  
+    
+def load_ques_based_features():
+
+    ques_based_features = defaultdict(list)
+    ques_based_labels = defaultdict(list)
+    
+    count = 0
+    with open(simp.INVITED_INFO_TRAIN) as f:
+        training_data = f.readline().strip().split("\t")
+        while training_data and len(training_data) == 3 :
+
+            question = simp.questions[training_data[0]]
+            user = simp.users[training_data[1]]
+            #print training_data[1], 'user key'
+            ques_key = training_data[0]
+            if ques_key in unique_ques:
+
+                ques_based_features[ques_key].append(get_full_feature(question, user))
+                ques_based_labels[ques_key].append([training_data[2]])
+                
+            count = count +1    
+            if count % 1000 == 0:
+                print count
+                
+            training_data = f.readline().strip().split("\t")
+#             if count > 5000:
+#                 break
+            
+    print 'dumping data...'    
+    pickle.dump(ques_based_features, open("feature/ques_based_best_word_features.p", "wb"), protocol=2)
+    pickle.dump(ques_based_labels, open("feature/ques_based_labels.p", "wb"), protocol=2 )
+        
     print "done"   
     
 if __name__ == "__main__":
     # stuff only to run when not called via 'import' here
     #main_fn()
-    load_user_based_features() 
+    #load_user_based_features()
+    load_ques_based_features() 

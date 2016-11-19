@@ -110,7 +110,7 @@ momentum = 0.99
 eStop = True
 sgd_Nesterov = True
 sgd_lr = 1e-5
-batch_size=5000
+batch_size=500
 nb_epoch=100
 verbose=True
 
@@ -126,7 +126,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
     print "<run_NN>"
     global model_num
     if test:
-        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.8)
+        features_tr, features_te,labels_tr, labels_te = train_test_split(features,labels, train_size = 0.9)
         print "Using separate test data", len(features_tr), len(features_te)
         
         features_tr, labels_tr = balanced_subsample(features_tr, original_label(labels_tr), subsample_size=subsample_size)
@@ -137,7 +137,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
         labels_tr = transform_label(labels_tr)
         print "Using a sample training data"
     
-    call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='auto')
+    call_ES = EarlyStopping(monitor='val_acc', patience=6, verbose=1, mode='max')
     
     # Generate Model
     model = genmodel(num_units=arch, reg_coeff=reg_coeff )
@@ -147,7 +147,7 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
     
     # sgd = RMSprop(lr=sgd_lr, rho=0.9, epsilon=1e-08, decay=sgd_decay)
     
-    model.compile(loss='MSE', optimizer=sgd, metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
     # Train Model
     if eStop:
         model.fit(features_tr, labels_tr, nb_epoch=nb_epoch, batch_size=batch_size, 
@@ -183,9 +183,9 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
     print "</run_NN>"
     
 
-run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=False, test=True)
-run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=False, test=True)
-run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, save=False, test=True)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=True, test=True)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, save=True, test=True)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, save=True, test=True)
 
 
 

@@ -20,7 +20,8 @@ def train_NB(train_data, train_label, count):
     print 'type(train_label)', type(train_label)
     train_data = np.asarray(train_data)
     train_label = np.asarray(train_label)
-    
+    print 'type(train_data)', type(train_data)
+    print 'type(train_label)', type(train_label)
     nb_model = MultinomialNB()
     #y_pred_prob = nb_model.fit(train_data, train_label).predict_proba(train_data)
     nb_model.fit(train_data, train_label)
@@ -35,8 +36,7 @@ def train_user_based_models():
         print 'user_key', user_key
         print '\n\n'
         train_NB(user_based_train_data[user_key][0],user_based_train_data_lables[user_key], count)
-        count = count + 1
-        break
+        count = count + 1    
     
 
 def dump_model(file_suffix, nb_model, testdata, testlabel):

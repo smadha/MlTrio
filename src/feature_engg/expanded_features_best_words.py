@@ -125,8 +125,7 @@ def load_user_based_features():
                 features.append(get_full_feature(question, user))
                 user_based_features[training_data[1]].append(features)
                 user_based_labels[training_data[1]].append(training_data[2])
-            count = count +1
-                
+            count = count +1    
             if count % 1000 == 0:
                 print count
                 

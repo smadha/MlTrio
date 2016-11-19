@@ -1,6 +1,7 @@
 from keras.layers import Input, Dense
 from keras.models import Model
 from keras import regularizers
+from keras.optimizers import SGD
 
 import numpy as np
 import cPickle as pickle
@@ -51,7 +52,7 @@ print np.shape(user_data)
 
 
 
-def train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch):
+def train_user_encoder_decoder(isNorm, loss_func, reg_p, lr, enc_dim, file_suffix, batch):
     
     modify_data(isNorm) 
     num_of_features = np.shape(user_data_train)[1]
@@ -72,7 +73,10 @@ def train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, b
     decoder_layer = autoencoder.layers[-1]
     # create the decoder model
     decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
-    autoencoder.compile(optimizer='adadelta', loss=loss_func)
+    
+    ksgd = SGD(lr=lr, decay=1e-6, momentum=0.99, nesterov=True)
+    autoencoder.compile(optimizer=ksgd, loss=loss_func)
+    #autoencoder.compile(optimizer='adadelta', loss=loss_func)
     
     hist = autoencoder.fit(user_data_train, user_data_train,
                     nb_epoch=100,
@@ -120,8 +124,9 @@ def modify_data(isNorm):
 
 def gridSearch():
     normalise_value = [True, False]
-    loss_func_arr = ['mse','kld']
-    reg_param = [0.00001, 0.0001, 0.001, 0.3, 0.1, 1,2]
+    loss_func_arr = ['binary_crossentropy', 'mse','kld']
+    reg_param = [0.00005, 0.00001, 0.0001, 0.001, 0.3, 0.1, 1,2]
+    learnin_param = [0.005,0.001,0.0005, 0.05, 0.01]
     encoding_dim = [100,300,500,1000]
     batch_size = [1000]
     file_suffix = 0
@@ -133,13 +138,14 @@ def gridSearch():
             
             for loss_func in loss_func_arr:
                 for reg_p in reg_param:
-                    for enc_dim in encoding_dim:
-                        for batch in batch_size:
-                            data ="\n\n\n" + str(isNorm) + "  ,Loss: "+ str(loss_func)+ "  ,Reg_param "+ str(reg_p)+ "  ,Encoding_dim "+ str(enc_dim)+ "  ,batch size: "+ str(batch)+" , file_suffix::"+ str(file_suffix)
-                            print data
-                            myfile.write(str(data))
-                            train_user_encoder_decoder(isNorm, loss_func, reg_p, enc_dim, file_suffix, batch)
-                            file_suffix += 1
+                    for lr in learnin_param:
+                        for enc_dim in encoding_dim:
+                            for batch in batch_size:
+                                data ="\n\n\n" + str(isNorm) + "  ,Loss: "+ str(loss_func)+ "  ,Reg_param "+ str(reg_p)+ "  ,Encoding_dim "+ str(enc_dim)+ "  ,batch size: "+ str(batch)+" , file_suffix::"+ str(file_suffix)
+                                print data
+                                myfile.write(str(data))
+                                train_user_encoder_decoder(isNorm, loss_func, reg_p, lr, enc_dim, file_suffix, batch)
+                                file_suffix += 1
                             
 gridSearch()
 

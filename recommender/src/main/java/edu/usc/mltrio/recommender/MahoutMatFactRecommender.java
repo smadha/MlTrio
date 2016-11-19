@@ -54,14 +54,16 @@ public class MahoutMatFactRecommender implements RecommenderBuilder{
 		
 		int [] numFeaturesArr = {16,32};
 		double [] lambdaArr = {0.00001,0.000001,0.0001};
-		int[] iterArr = {20,30,50,100}
+		int[] iterArr = {20,30,50,100};
 				
 		for(int numFeaturesI : numFeaturesArr){
 			for(double lambdaI : lambdaArr ){
-				RecommenderBuilder builder = new MahoutMatFactRecommender(numFeaturesI, lambdaI, 50);
-				
-				double result = evaluator.evaluate(builder, null, model, 0.8, 0.8);
-				System.out.println("numFeatures - "+ numFeaturesI + " lambda - "+ lambdaI + " Acc - " + result);
+				for (int iterI : iterArr ){
+					RecommenderBuilder builder = new MahoutMatFactRecommender(numFeaturesI, lambdaI, iterI);
+					
+					double result = evaluator.evaluate(builder, null, model, 0.8, 0.8);
+					System.out.println("numFeatures - "+ numFeaturesI + " lambda - "+ lambdaI + " Acc - " + result);
+				}
 			}
 		}
 	}

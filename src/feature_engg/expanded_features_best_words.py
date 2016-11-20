@@ -164,7 +164,7 @@ def load_ques_based_features():
 
                 ques_based_features[ques_key].append(get_full_feature(question, user))
                 ques_based_labels[ques_key].append([training_data[2]])
-                
+
             count = count +1    
             if count % 1000 == 0:
                 print count
@@ -178,9 +178,37 @@ def load_ques_based_features():
     pickle.dump(ques_based_labels, open("feature/ques_based_labels.p", "wb"), protocol=2 )
         
     print "done"   
+  
+  
+    
+"""
+ 
+ Transform the validation data file for the best words used feature set.
+ Store them in a file: feature/validation_best_word_features.p
+ 
+"""
+def dump_transformed_validation_feature():
+    count = 0
+    features = []
+    with open("../../bytecup2016data/validate_nolabel.txt") as f:
+        training_data = f.readline().strip().split(",")
+        training_data = f.readline().strip().split(",")
+        while training_data and len(training_data) == 2 :
+            question = simp.questions[training_data[0]]
+            user = simp.users[training_data[1]]
+            features.append(get_full_feature(question, user))
+            count = count +1
+            if count % 1000 == 0:
+                print count
+            training_data = f.readline().strip().split(",")
+    print 'dumping validation data...'
+    pickle.dump(features, open("feature/validation_best_word_features.p", "wb"), protocol=2)
+    print "done"
+
     
 if __name__ == "__main__":
     # stuff only to run when not called via 'import' here
     #main_fn()
     #load_user_based_features()
-    load_ques_based_features() 
+    #load_ques_based_features()
+    dump_transformed_validation_feature() 

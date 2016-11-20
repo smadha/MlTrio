@@ -61,13 +61,6 @@ def dump_model(file_suffix, nb_model, testdata, testlabel):
     with open(updated_file_name, 'wb') as fid:
         pickle.dump(nb_model, fid)    
 
-    # load it again
-    with open(updated_file_name, 'rb') as fid:
-        gnb_loaded = pickle.load(fid)
-    
-    y_pred = gnb_loaded.predict(testdata)
-    print("No. of mislabeled points out of a total %d points : %d" %(testdata.shape[0], (testlabel.flatten() != y_pred).sum()))
-    
        
 if __name__ == "__main__":
     #train_user_based_models()

@@ -23,21 +23,24 @@ def predic_prob(data, id):
 def predict_prob_nolabel_data():
     print 'in'
     count = 0
+    res = open("validate_label.csv", "w")
     with open("../../bytecup2016data/validate_nolabel.txt", 'rb') as f:
         print 'in2'
         validation_data = f.readline().strip().split(",")
-        validation_data = f.readline().strip().split(",")
-
+        validation_data_line = f.readline().strip()
+        validation_data = validation_data_line.split(",")
         while validation_data and len(validation_data) == 2 :
             ques_key = validation_data[0]
             if ques_key in unique_ques:
-                print predic_prob(transformed_validation_feature[count], ques_key)
+                prob = predic_prob(transformed_validation_feature[count], ques_key)
             else:
-                print old_model_data[count]
+                prob = old_model_data[count]
             count = count + 1
             if (count%1000) == 0:
                 print count
-            validation_data = f.readline().strip().split(",")
+            res.write(validation_data_line + "," + format(prob, '.8f') + "\n")
+            validation_data_line = f.readline().strip()
+            validation_data = validation_data_line.split(",")
             
             
 predict_prob_nolabel_data()

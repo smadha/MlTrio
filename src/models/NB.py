@@ -25,13 +25,10 @@ def train_user_based_models():
     print 'loading user based simple best word label file'
     user_based_train_data_lables = pickle.load(open("../feature_engg/feature/user_based_labels.p", "rb"))
 
-    
+    print 'Training user NB models'
     user_keys = user_based_train_data.keys()
     count = 0
     for user_key in user_keys:
-        print 'user_key', user_key
-        print '\n\n'
-        print 'training NB for user:', user_key
         train_NB(user_based_train_data[user_key],user_based_train_data_lables[user_key], user_key)
         count = count + 1
     
@@ -45,14 +42,14 @@ def train_ques_based_models():
     print 'loading question based simple best word label file'
     ques_based_train_data_lables = pickle.load(open("../feature_engg/feature/ques_based_labels.p", "rb"))
  
+    print 'Training question NB models'
     ques_keys = ques_based_train_data.keys()
     count = 0
     for ques_key in ques_keys:
-        print 'ques_key', ques_key
-        print '\n\n'
-        print 'training NB for ques:', ques_key
         train_NB(ques_based_train_data[ques_key],ques_based_train_data_lables[ques_key], ques_key)
         count = count + 1     
+        if (count %100) == 0:
+            print count
     
 
 def dump_model(file_suffix, nb_model, testdata, testlabel):

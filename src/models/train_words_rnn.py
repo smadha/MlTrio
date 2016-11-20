@@ -22,7 +22,8 @@ max_review_length = 60
 
 
 X,y = pickle.load(open("../feature_engg/feature/word_features.p", "r") ), pickle.load(open("../feature_engg/feature/labels.p", "r") )
-X_train, X_test, y_train, y_test = train_test_split(X,y, train_size = 0.8)
+# X_train, X_test, y_train, y_test = train_test_split(X,y, train_size = 0.8)
+X_train, X_test, y_train, y_test = X,X[0:1000],y,y[0:1000]
 
 
 X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
@@ -42,14 +43,14 @@ num_epoch=20
 batch_size=64
 verbose = True
 
-call_ES = EarlyStopping(monitor='val_acc', patience=3, verbose=1, mode='max')
+call_ES = EarlyStopping(monitor='val_acc', patience=5, verbose=1, mode='max')
 
 print "len before down sampling", len(X_train)
 X_train, y_train = balanced_subsample(X_train, y_train, subsample_size = 2.5, possible_y=['1','0'] )
 print "len after down sampling", len(X_train)
 
 model.fit(X_train, y_train, nb_epoch=num_epoch, batch_size=batch_size,
-          verbose=verbose, callbacks=[call_ES], validation_split=0.2)
+          verbose=verbose, callbacks=[call_ES], validation_split=0.1)
 
 model.save("./model/rnn_words.h5", overwrite=True)
 # Final evaluation of the model

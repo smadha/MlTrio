@@ -29,8 +29,8 @@ def main_fn():
     print "best_words", len(best_words)
     print "best_chars", len(best_chars)
     
-    with open("../../bytecup2016data/invited_info_train_tr.txt") as f:
-        training_data = f.readline().strip().split("\t")
+    with open("../../bytecup2016data/invited_info_train_test.txt") as f:
+        training_data = f.readline().strip().split(",")
         while training_data and len(training_data) == 3 :
             
             labels.append(training_data[2])
@@ -57,7 +57,7 @@ def main_fn():
             if len(char_features) % 1000 == 0:
                 print len(char_features)
                 
-            training_data = f.readline().strip().split("\t")
+            training_data = f.readline().strip().split(",")
             
             
         

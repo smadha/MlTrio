@@ -32,7 +32,8 @@ def predict_prob_nolabel_data():
         while validation_data and len(validation_data) == 2 :
             ques_key = validation_data[0]
             if ques_key in unique_ques:
-                prob = predic_prob(transformed_validation_feature[count], ques_key)
+                prob_arr = predic_prob(transformed_validation_feature[count], ques_key)[0]
+                prob = format(prob_arr[1], '.8f')
             else:
                 prob = old_model_data[count]
             count = count + 1

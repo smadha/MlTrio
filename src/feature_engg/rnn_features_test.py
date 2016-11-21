@@ -31,6 +31,7 @@ def main_fn():
     
     with open("../../bytecup2016data/invited_info_train_test.txt") as f:
         training_data = f.readline().strip().split(",")
+        training_data = f.readline().strip().split(",")
         while training_data and len(training_data) == 3 :
             
             labels.append(training_data[2])
@@ -64,10 +65,10 @@ def main_fn():
     print "features", len(char_features)
     print "labels", len(labels)
         
-    pickle.dump(char_features, open("./feature/char_features.p", "wb") )
-    pickle.dump(word_features, open("./feature/word_features.p", "wb") )
-    pickle.dump(tag_features, open("./feature/tag_features.p", "wb") )
-    pickle.dump(labels, open("./feature/labels.p", "wb") )
+    pickle.dump(char_features, open("./feature/char_features_test.p", "wb") )
+    pickle.dump(word_features, open("./feature/word_features_test.p", "wb") )
+    pickle.dump(tag_features, open("./feature/tag_features_test.p", "wb") )
+    pickle.dump(labels, open("./feature/labels_test.p", "wb") )
     
     print "max char_features", max([len(x) for x in char_features]) 
     print "max word_feature", max([len(x) for x in word_features]) 

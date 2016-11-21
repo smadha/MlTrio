@@ -648,3 +648,5 @@ def run_NN(arch, reg_coeff, sgd_decay, class_weight_0,subsample_size=2.0, save=F
 
 run_NN([len(features[0]),1024, 512, 2], 1e-05, 1e-05, 1, 2.5, True)
 run_NN([len(features[0]),1024, 1024, 2], 1e-05, 1e-05, 1, 2.5, True)
+
+Model - 1

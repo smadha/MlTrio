@@ -2467,3 +2467,14 @@ avg / total       0.93      0.93      0.93     34416
 
 arch, reg_coeff, sgd_decay, class_weight_0, subsample_size [354, 1024, 1024, 2] 1e-05 5e-05 1 2.5
 
+
+MODEL - 17
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 512, 2], 1e-06, 1e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, False)
+run_NN([len(features[0]),1024, 1024, 2], 1e-05, 5e-05, 1, 2.5, False)

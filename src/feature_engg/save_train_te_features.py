@@ -7,7 +7,7 @@ with open("../../bytecup2016data/invited_info_train_test.txt") as f:
     f.readline()
     test_data = f.readline().strip().split(",")
 
-    while test_data and len(test_data) == 2 :
+    while test_data and len(test_data) >= 2 :
         question_id = test_data[0]
         user_id = test_data[1]
         
